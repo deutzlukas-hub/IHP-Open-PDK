@@ -1,0 +1,22 @@
+// load modelgen plugins
+load mgsim
+
+verilog
+// include corners and testbench
+include ../../../models/cornerCAP.va
+include ./tb_cap_cutoff_mc.va
+include ./consts.params
+
+options numdgt=9
+
+// instantiate best-case corner and testbench module
+cap_bcs corner_cap();
+tb_cap_ac_mc #(.mm_ok(1)) tb(out1, out2);
+
+// run mismatch mc ac sweep
+dc
+print ac v(out1) v(out2)
+store ac v(out1) v(out2)
+// TODO: measure and store cut off freq instead of raw output
+ac $seed 1 1000 1 dec 1e3 1e6 1e7 basic
+
