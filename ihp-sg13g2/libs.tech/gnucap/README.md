@@ -7,7 +7,7 @@ The Makefiles described below manage the build and test flow for Verilog-A
 device models. 
  
 The models are compiled with the gnucap-modelgen-verilog compiler, and support 
-fot the OpenVAF model compiler is planned. 
+for the OpenVAF model compiler is planned. 
 
 The implementation is tested using the Gnucap simulator. The automated test flow 
 cross-validates device behavior by comparing Gnucap simulation results against 
@@ -46,10 +46,25 @@ Install:
 
 - [Gnucap](https://codeberg.org/gnucap/gnucap)
 - [gnucap-modelgen-verilog](https://codeberg.org/gnucap/gnucap-modelgen-verilog)
+- [Ngspice](https://sourceforge.net/projects/ngspice/files/ng-spice-rework/46/)
 
 Tested with:
 - Gnucap: `sckt 2026.05.12`
 - gnucap-modelgen-verilog: `sckt 2026.05.12`
+- Ngspice: `ngspice-46` 
+
+To run Ngspice testbench, add the following environment variables to your  
+`~/.bashrc`: 
+
+```bash
+# Path to your local IHP Open PDK checkout
+export PDK_ROOT=/path/to/IHP-Open-PDK
+# IHP process design kit name
+export PDK=ihp-sg13g2
+```
+
+Replace `/path/to/IHP-Open-PDK` with the path to your local IHP-Open-PDK 
+repository.
 
 To plot and compare test results between Gnucap and Ngspice, install the 
 required Python dependencies. From the top-level `gnucap/` directory, create a 
