@@ -5,6 +5,9 @@ libs_tech_dir = Path(__file__).parent.parent.parent
 dir_gc = libs_tech_dir / "gnucap"
 dir_sp = libs_tech_dir / "ngspice"
 
+dir_osdi_sp = dir_sp / "osdi"
+dir_osdi_gc = dir_gc / "plugins" / "osdi"
+
 test_dir = dir_gc / "tests"
 
 tests_dir_gc = test_dir / "gnucap"
@@ -15,5 +18,6 @@ fig_dir.mkdir(parents=True, exist_ok=True)
 
 assert dir_gc.exists()
 assert dir_sp.exists()
+assert dir_osdi_sp.exists()
 assert tests_dir_gc.exists()
 assert tests_dir_sp.exists()

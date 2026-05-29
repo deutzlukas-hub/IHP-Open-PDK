@@ -1,0 +1,22 @@
+* NMOS Id-Vd
+
+* bind osdi to spice model
+.model sg13_lv_nmos sg13g2_lv_nmos_psp
+
+.option reltol=1e-4
+
+vg 1 0 1.2
+vd 2 0 1.2
+
+N1 2 1 0 0 sg13_lv_nmos w=0.9u l=0.34u ng=3 rfmode=0
+
+.control
+pre_osdi sg13g2_moslv_paramset_openvaf_nolocalparam_instance.osdi
+set wr_vecnames
+set wr_singlescale
+dc vd 0.0 1.2 0.02 vg 0.2 1.2 0.2
+wrdata check/tb_moslv_nmos_id_vd_ng3.sp.out v(1) i(vd)
+.endc
+
+.end
+

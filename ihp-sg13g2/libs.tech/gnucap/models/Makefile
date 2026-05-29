@@ -16,6 +16,7 @@ TARGETS = \
 	sg13g2_moslv_rf_paramset \
 	sg13g2_moshv_paramset \
 	sg13g2_moshv_rf_paramset \
+	sg13g2_moslv_paramset_openvaf
 
 PLUGINS = $(TARGETS:%=$(TARGET_DIR)/%.so)
 
@@ -31,7 +32,7 @@ $(TARGETS): %: $(TARGET_DIR)/%.so
 # Auto-generate convenience targets to dump each item in TARGETS
 $(TARGETS:%=dump-%): dump-%: %.dump.va
 # Auto-generate convenience targets to build OSDI for each item in TARGETS
-$(TARGETS:%=osdi-%): osdi-%: $(TARGET_DIR)/%.osdi
+$(TARGETS:%=osdi-%): osdi-%: $(OSDI_DIR)/%.osdi
 
 # Generate C++ from Verilog-A
 $(TARGET_DIR)/%.cc: %.va | $(TARGET_DIR)
@@ -54,7 +55,7 @@ $(TARGET_DIR)/%.so: $(TARGET_DIR)/%.o
 	${MODELGEN_VERILOG} ${MGFLAGS} -o $@ --dump $<
 
 # Generate OSDI from dumped paramset Verilog-A module
-$(TARGET_DIR)/%.osdi: %.dump.va
+$(OSDI_DIR)/%.osdi: %.dump.va
 	${OPENVAF} $< -o $@
 
 # Clean plugins
