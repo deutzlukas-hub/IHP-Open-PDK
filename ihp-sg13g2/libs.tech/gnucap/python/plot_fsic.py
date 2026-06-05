@@ -191,11 +191,11 @@ def crossing(t, v, level, rising=True):
     return t[idx] + (level - v[idx]) * (t[idx+1] - t[idx]) / (v[idx+1] - v[idx])
 
 def plot_tb_moslv_inv_chain(show=False):
-
+    
     # num inverters
     N_list = [50, 100, 500, 1000]
 
-    cmap = plt.get_cmap('viridis')
+    cmap = plt.get_cmap('plasma')
     norm = LogNorm(vmin=min(N_list), vmax=max(N_list))
 
     fig = plt.figure(figsize=(10, 6))
@@ -203,6 +203,8 @@ def plot_tb_moslv_inv_chain(show=False):
     ax0 = plt.subplot(gs[0])
 
     vmid = 0.6
+
+    plt.title("moslv CMOS inverter chain tt corner")
 
     for i, N in enumerate(N_list):
 
@@ -222,17 +224,18 @@ def plot_tb_moslv_inv_chain(show=False):
 
         color = cmap(norm(N))
 
-        ax0.plot(t_arr_sp1, vout_arr_sp1, ls="-", color=color, label=f"vout, N={N}")
+        ax0.plot(t_arr_sp1, vout_arr_sp1, ls="-", color=color, lw = 2.0, label=f"vout, N={N}")
+        ax0.plot(t_arr_sp2, vout_arr_sp2, ls="--", color='k', lw = 1.0)
         ax0.plot(tout, 0.6, marker = "o", color = color, zorder=5, ms=4)
-        ax0.plot(t_arr_sp2, vout_arr_sp2, ls="--", color='k')
 
         if i == len(N_list) - 1:
-            ax0.plot(t_arr_sp1, vin_arr_sp1, ls='--', color="k", alpha=0.5, label="vin")
+            ax0.plot(t_arr_sp1, vin_arr_sp1, ls='-', color="grey", alpha=1.0, lw = 2.0, label="vin")
             tin = crossing(t_arr_sp1, vin_arr_sp1, vmid, rising=True)
-            ax0.plot(tin, 0.6, marker = "o", color = "k", zorder=5, alpha=0.5, ms=4)
-
+            ax0.plot(tin, 0.6, marker = "o", color = "grey", zorder=5, alpha=1.0, ms=4)
 
     ax0.axhline(0.6, ls=":", lw=1.0, color="0.6", alpha=0.6)
+
+    ax0.text(0.6*tin, 0.59, "input", color="0.45", fontsize=9, ha="center")
 
     plt.tight_layout()
     ax0.set_xlabel("time [µs]")
@@ -255,6 +258,8 @@ def plot_tb_moslv_inv_chain(show=False):
     return
 
 if __name__ == "__main__":
+
+    # plot_tb_nmos_id_vd(1)
 
     # for ng in range(1, 5):
     #     plot_tb_nmos_id_vd(ng)

@@ -2,8 +2,10 @@
 * Corner: tt
 
 * bind osdi to spice model
-.model sg13_lv_nmos sg13g2_lv_nmos_psp
-.model sg13_lv_pmos sg13g2_lv_pmos_psp
+.model sg13_lv_nmos_test sg13g2_lv_nmos_psp
+.model sg13_lv_pmos_test sg13g2_lv_pmos_psp
+
+.include sg13g2_moslv_mod.lib
 
 .option reltol=1e-4
 
@@ -12,8 +14,8 @@ VIN in 0 PWL(0 0 10n 0 11n 1.2 100.0n 1.2)
 
 * Inverter subcircuit
 .subckt inv in out vdd gnd
-N1 out in vdd vdd sg13_lv_pmos w=2.8e-07 l=3.4e-07 rfmode=0
-N2 out in gnd gnd sg13_lv_nmos w=3.5e-07 l=3.4e-07 rfmode=0
+X1 out in vdd vdd sg13_lv_pmos w=2.8e-07 l=3.4e-07 rfmode=0
+X2 out in gnd gnd sg13_lv_nmos w=3.5e-07 l=3.4e-07 rfmode=0
 .ends
 
 * Inverter chain instances

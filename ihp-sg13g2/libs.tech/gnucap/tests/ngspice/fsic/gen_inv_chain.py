@@ -27,8 +27,8 @@ def generate_inverter_chain(
     lines.append(f"* Corner: {corner}")
     lines.append("")
     lines.append("* bind osdi to spice model")
-    lines.append(".model sg13_lv_nmos sg13g2_lv_nmos_psp")
-    lines.append(".model sg13_lv_pmos sg13g2_lv_pmos_psp")
+    lines.append(".model sg13_lv_nmos_test sg13g2_lv_nmos_psp")
+    lines.append(".model sg13_lv_pmos_test sg13g2_lv_pmos_psp")
     lines.append("")
     lines.append(".option reltol=1e-4")
     lines.append("")
@@ -37,8 +37,8 @@ def generate_inverter_chain(
     lines.append("")
     lines.append("* Inverter subcircuit")
     lines.append(".subckt inv in out vdd gnd")
-    lines.append(f"N1 out in vdd vdd sg13_lv_pmos w={w_pmos} l={l_pmos} rfmode=0")
-    lines.append(f"N2 out in gnd gnd sg13_lv_nmos w={w_nmos} l={l_nmos} rfmode=0")
+    lines.append(f"X1 out in vdd vdd sg13_lv_pmos w={w_pmos} l={l_pmos} rfmode=0")
+    lines.append(f"X2 out in gnd gnd sg13_lv_nmos w={w_nmos} l={l_nmos} rfmode=0")
     lines.append(".ends")
     lines.append("")
     lines.append("* Inverter chain instances")
@@ -80,9 +80,9 @@ def generate_inverter_chain(
     return output_file
 
 if __name__ == "__main__":
-
-    generate_inverter_chain(num_inverters=50)
-    generate_inverter_chain(num_inverters=100)
-    generate_inverter_chain(num_inverters=500)
-    generate_inverter_chain(num_inverters=1000)
+    generate_inverter_chain(num_inverters=10)
+    # generate_inverter_chain(num_inverters=50)
+    # generate_inverter_chain(num_inverters=100)
+    # generate_inverter_chain(num_inverters=500)
+    # generate_inverter_chain(num_inverters=1000)
 
