@@ -75,48 +75,48 @@ def plot_tb_moslv_inv_chain(show=False):
     cbar = fig.colorbar(sm, ax=ax0)
     cbar.set_label("Number of inverters N")
 
-    # # Read benchmark dataruntime
-    # filepath_sp_param = bm_dir_sp / f"bm_moslv_inv_chain_tt.csv"
-    # filepath_sp_gener = bm_dir_sp / f"bm_moslv_inv_chain_tt.csv"
-    #
-    # df_sp_param = pd.read_csv(filepath_sp_param)
-    # df_sp_gener = pd.read_csv(filepath_sp_gener)
-    #
-    # df_sp_param['N'] = df_sp_param['test'].str.extract(r'N(\d+)').astype(int)
-    # df_sp_gener['N'] = df_sp_gener['test'].str.extract(r'N(\d+)').astype(int)
-    #
-    # # Merge on N to ensure alignment
-    # merged = pd.merge(
-    #     df_sp_param[['N', 'median_s']],
-    #     df_sp_gener[['N', 'median_s']],
-    #     on='N',
-    #     suffixes=('_param', '_gener')
-    # ).sort_values('N')
-    #
-    # # Extract aligned data
-    # N_arr = merged['N'].values
-    # median_s_param = merged['median_s_param'].values
-    # median_s_gener = merged['median_s_gener'].values
-    #
-    # speedup = median_s_gener / median_s_param
-    #
-    # # plot median runtime time
-    # ax1.semilogx(N_arr, median_s_param, "-o", color="blue", lw = 2.0, label="paramset osdi")
-    # ax1.semilogx(N_arr, median_s_gener, "-o", color="red", lw = 2.0, label="generic osdi")
-    # ax1.set_ylabel("Median Runtime [s]", fontsize=12)
-    # ax1.set_xlabel("Number of inverters N", fontsize=12)
-    # ax1.legend(fontsize=10)
-    # ax1.grid(True, alpha=0.3)
-    #
-    # # plot speedup
-    # ax2.semilogx(N_list, speedup, "-o", c='k', lw=2.0)
-    # ax2.axhline(1.0, ls='--', color='k', lw=1, alpha=0.5)
-    # ax2.set_ylabel("Speedup Ratio\n(Generic / Paramset)", fontsize=12)
-    # ax2.set_xlabel("Number of inverters N", fontsize=12)
-    # ax2.legend(fontsize=10)
-    # ax2.grid(True, alpha=0.3)
-    #
-    # plt.legend()
+    # Read benchmark dataruntime
+    filepath_sp_param = bm_dir_sp / f"bm_moslv_inv_chain_tt_generic.csv"
+    filepath_sp_gener = bm_dir_sp / f"bm_moslv_inv_chain_tt_paramset.csv"
+
+    df_sp_param = pd.read_csv(filepath_sp_param)
+    df_sp_gener = pd.read_csv(filepath_sp_gener)
+
+    df_sp_param['N'] = df_sp_param['test'].str.extract(r'N(\d+)').astype(int)
+    df_sp_gener['N'] = df_sp_gener['test'].str.extract(r'N(\d+)').astype(int)
+
+    # Merge on N to ensure alignment
+    merged = pd.merge(
+        df_sp_param[['N', 'median_s']],
+        df_sp_gener[['N', 'median_s']],
+        on='N',
+        suffixes=('_param', '_gener')
+    ).sort_values('N')
+
+    # Extract aligned data
+    N_arr = merged['N'].values
+    median_s_param = merged['median_s_param'].values
+    median_s_gener = merged['median_s_gener'].values
+
+    speedup = median_s_param / median_s_gener
+
+    # plot median runtime time
+    ax1.semilogx(N_arr, median_s_param, "-o", color="blue", lw = 2.0, label="paramset osdi")
+    ax1.semilogx(N_arr, median_s_gener, "-o", color="red", lw = 2.0, label="generic osdi")
+    ax1.set_ylabel("Median Runtime [s]", fontsize=12)
+    ax1.set_xlabel("Number of inverters N", fontsize=12)
+    ax1.legend(fontsize=10)
+    ax1.grid(True, alpha=0.3)
+
+    # plot speedup
+    ax2.semilogx(N_list, speedup, "-o", c='k', lw=2.0)
+    ax2.axhline(1.0, ls='--', color='k', lw=1, alpha=0.5)
+    ax2.set_ylabel("Speedup Ratio\n(Paramset / Generic )", fontsize=12)
+    ax2.set_xlabel("Number of inverters N", fontsize=12)
+    ax2.legend(fontsize=10)
+    ax2.grid(True, alpha=0.3)
+
+    plt.legend()
 
     plt.savefig(fig_sp / (f"tb_moslv_inv_chain_tt" + ".png"), dpi=300)
 

@@ -132,7 +132,7 @@ if __name__ == "__main__":
 
     # Average propagation delay of one inverter
     tpd = 0.15679572639369496 * 1e-9  # seconds
-    num_cycles = 20
+    num_cycles = 50
     points_per_cycle = 100
 
     gen = RingOscillatorGenerator(wrdata=True)
