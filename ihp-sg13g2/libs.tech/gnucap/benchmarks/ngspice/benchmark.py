@@ -73,6 +73,9 @@ class Benchmarker():
 
         print(f"→ {test_name}: STARTED")
 
+        # Warm-up run (not recorded)
+        self.run_ngspice(test_name)
+
         times = timeit.repeat(
                 stmt = lambda: self.run_ngspice(test_name),
                 repeat = self.repeat,

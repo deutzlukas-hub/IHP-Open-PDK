@@ -2,8 +2,7 @@
 """
 Generate ring oscillator testbench for ngspice
 """
-from base_generator import BaseNetlistGenerator
-
+from base_generator import BaseNetlistGenerator, ModelType
 
 class RingOscillatorGenerator(BaseNetlistGenerator):
 
@@ -126,12 +125,10 @@ class RingOscillatorGenerator(BaseNetlistGenerator):
             print(f"Warning: num_inv={num_inv} is even. Ring oscillators typically need odd number of stages.")
 
         self.num_inv = num_inv
-        super().generate_netlist(f"tb_moslv_ring_osc_N{num_inv}_tt")
+        return super().generate_netlist(f"tb_moslv_ring_osc_N{num_inv}_tt")
 
 
 if __name__ == "__main__":
-
-    from base_generator import ModelType
 
     # Average propagation delay of one inverter
     tpd = 0.15679572639369496 * 1e-9  # seconds
