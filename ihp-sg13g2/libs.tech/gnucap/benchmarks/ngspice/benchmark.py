@@ -1,4 +1,5 @@
 import os
+import shlex
 import timeit
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
@@ -6,15 +7,24 @@ import subprocess
 import statistics as stats
 import csv
 
+from scipy.sparse.csgraph import csgraph_masked_from_dense
+
+from base_generator import BaseNetlistGenerator
 
 class Benchmarker():
 
-    def __init__(self, test_dir: Path, repeat: int = 5, number: int = 1):
+    def __init__(self,
+        test_dir: Path,
+        repeat: int = 5,
+        number: int = 1,
+        debug: bool = False):
+
         self.test_dir = test_dir
-        self.bm_dir = test_dir / "bm"
+        self.bm_dir = Path("bm")
 
         self.repeat = repeat
         self.number = number
+        self.debug = debug
 
     @staticmethod
     def write_csv(results: list[dict], out_path: Path) -> None:
@@ -28,16 +38,36 @@ class Benchmarker():
 
     def run_ngspice(self, test_name) -> None:
 
-        proc = subprocess.run(
-            ["ngspice", "-b", test_name],
-            cwd=self.test_dir,
-            stdout = subprocess.DEVNULL,
-            stderr = subprocess.DEVNULL,
-        )
+        env = os.environ.copy()
+        env["PDK_ROOT"] = str(Path.home() / "git/IHP-Open-PDK")
+        env["PDK"] = "ihp-sg13g2"
+
+        if self.debug:
+            proc = subprocess.run(
+                ["ngspice", "-b", test_name],
+                cwd=self.test_dir,
+                env=env,
+                capture_output=True,
+                text=True,
+            )
+        else:
+            proc = subprocess.run(
+                ["ngspice", "-b", test_name],
+                cwd=self.test_dir,
+                env=env,
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+            )
 
         if proc.returncode != 0:
-            raise RuntimeError(f"ngspice failed {proc.returncode}")
-
+            if self.debug:
+                raise RuntimeError(
+                    f"ngspice failed with code {proc.returncode}\n"
+                    f"stdout: {proc.stdout[-500:]}\n"  # Last 500 chars
+                    f"stderr: {proc.stderr[-500:]}"
+                )
+            else:
+                raise RuntimeError(f"ngspice failed with code {proc.returncode}")
 
     def benchmark(self, test_name: str) -> dict:
 
@@ -101,15 +131,28 @@ class Benchmarker():
         return sorted(results, key=lambda r: r["test"])
 
     def run(self,
-            test_names: list[str],
-            out_name: str,
-            workers: int | None = None
+        generator: BaseNetlistGenerator,
+        model_type: str,
+        configs: list[dict],
+        out_name: str,
+        workers: int | None = None
         ) -> Path:
+
+        generator.clean_build()
+        generator.set_model_type(model_type)
+        generator.generate_spiceinit()
+
+        test_names = []
+
+        for config in configs:
+            test_name = generator.generate_netlist(**config)
+            test_names.append(test_name)
+
+        results = self.benchmark_many(test_names, workers=workers)
 
         self.bm_dir.mkdir(exist_ok=True)
         out_path = self.bm_dir / out_name
 
-        results = self.benchmark_many(test_names, workers=workers)
         Benchmarker.write_csv(results, out_path)
 
         return out_path
