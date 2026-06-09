@@ -12,9 +12,6 @@ class RingOscillatorGenerator(BaseNetlistGenerator):
         l: float = 0.45e-6,
         pfact: float = 2.0,
         vdd: float = 1.2,
-        tran_stop: float = 20e-9,
-        tran_step: float = 0.05e-9,
-        tran_max: float = 20e-9,
     ):
 
         self.wrdata = wrdata
@@ -22,9 +19,6 @@ class RingOscillatorGenerator(BaseNetlistGenerator):
         self.l = l
         self.pfact = pfact
         self.vdd = vdd
-        self.tran_stop = tran_stop
-        self.tran_step = tran_step
-        self.tran_max = tran_max
 
         super().__init__()
 
@@ -119,12 +113,22 @@ class RingOscillatorGenerator(BaseNetlistGenerator):
 
         self.lines.append(".endc")
 
-    def generate_netlist(self, num_inv: int):
+    def generate_netlist(self,
+        num_inv: int,
+        tran_stop: float,
+        tran_step: float,
+        tran_max: float
+        ):
+
         """Generate ring oscillator netlist with specified number of inverters."""
         if num_inv % 2 == 0:
             print(f"Warning: num_inv={num_inv} is even. Ring oscillators typically need odd number of stages.")
 
         self.num_inv = num_inv
+        self.tran_stop = tran_stop
+        self.tran_step = tran_step
+        self.tran_max = tran_max
+
         return super().generate_netlist(f"tb_moslv_ring_osc_N{num_inv}_tt")
 
 

@@ -5,7 +5,25 @@ from gen_ring_osc import RingOscillatorGenerator
 
 def main():
 
-    configs = [{"num_inv": num_inv} for num_inv in [11, 51, 101]]
+    # Average propagation delay
+    tpd = 0.15679572639369496 * 1e-9
+    num_cycles = 20
+    points_per_cycle = 100
+
+    configs = []
+
+    for num_inv in [11, 51, 101]:
+        T = 2 * num_inv * tpd
+
+        configs.append(
+            {
+            "num_inv": num_inv,
+            "tran_stop": num_cycles * T,
+            "tran_step": T / points_per_cycle,
+            "tran_max": T / points_per_cycle,
+        }
+        )
+
     gen = RingOscillatorGenerator()
     bm = Benchmarker(build_dir, debug=True)
 
