@@ -6,7 +6,7 @@ from gen_multiplier import C6288Generator
 def benchmark_multiplier():
 
     gen = C6288Generator(tran_stop=2.0)
-    bm = Benchmarker(build_dir, repeat=1)
+    bm = Benchmarker(build_dir, repeat=5)
 
     configs = []
 

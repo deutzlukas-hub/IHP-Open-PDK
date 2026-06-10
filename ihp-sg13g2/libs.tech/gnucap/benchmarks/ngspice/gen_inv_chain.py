@@ -94,13 +94,13 @@ class InverterChainGenerator(BaseNetlistGenerator):
 
         # Print resource usage statistics
         self.lines.append("  * print resource usage statistics")
-        self.lines.append("  rusage all")
-        self.lines.append("  set")
         self.lines.append("")
 
         # Transient analysis
         tran_cmd = f"tran {self.tran_step} {self.tran_stop} 0 {self.tran_max}"
         self.lines.append(f"  {tran_cmd}")
+        self.lines.append("")
+        self.lines.append("  rusage all")
         self.lines.append("")
 
         if self.wrdata:
