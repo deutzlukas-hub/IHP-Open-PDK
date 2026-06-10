@@ -92,7 +92,7 @@ class BaseNetlistGenerator(ABC):
 
     def generate_netlist(self, net_name: str):
 
-        self.net_name = net_name
+        self.net_name = net_name + "_" + self.model_type.value
 
         # Clear any existing lines
         self.lines = []

@@ -7,8 +7,6 @@ import subprocess
 import statistics as stats
 import csv
 
-from scipy.sparse.csgraph import csgraph_masked_from_dense
-
 from base_generator import BaseNetlistGenerator
 
 class Benchmarker():
@@ -37,13 +35,21 @@ class Benchmarker():
 
         print(f"wrote {out_path}")
 
-    def run_ngspice(self, test_name, run_counter) -> None:
+    def run_ngspice(self, test_name: str, run_counter) -> None:
 
         env = os.environ.copy()
         env["PDK_ROOT"] = str(Path.home() / "git/IHP-Open-PDK")
         env["PDK"] = "ihp-sg13g2"
 
-        if self.debug:
+        if not self.debug:
+            proc = subprocess.run(
+                ["ngspice", "-b", "-o", f"../log/{test_name}.log{run_counter}", test_name],
+                cwd=self.test_dir,
+                env=env,
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+            )
+        else:
             proc = subprocess.run(
                 ["ngspice", "-b", test_name],
                 cwd=self.test_dir,
@@ -51,17 +57,6 @@ class Benchmarker():
                 capture_output=True,
                 text=True,
             )
-        else:
-            log_file = self.log_dir / f"{test_name}_run{run_counter}.log"
-
-            with open(log_file, "w") as f:
-                proc = subprocess.run(
-                    ["ngspice", "-b", test_name],
-                    cwd=self.test_dir,
-                    env=env,
-                    stdout=f,
-                    stderr=subprocess.DEVNULL,
-                )
 
         if proc.returncode != 0:
             if self.debug:

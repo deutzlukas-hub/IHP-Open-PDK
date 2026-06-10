@@ -164,37 +164,11 @@ class C6288Generator(BaseNetlistGenerator):
 
 if __name__ == "__main__":
 
-    import subprocess
-    from dirs import build_dir
-    import os
-    from pathlib import Path
-
-    # env = os.environ.copy()
-    # env["PDK_ROOT"] = str(Path.home() / "git/IHP-Open-PDK")
-    # env["PDK"] = "ihp-sg13g2"
-
     gen = C6288Generator(wrdata=True)
     gen.set_model_type(ModelType.GENERIC)
     gen.clean_build()
     gen.generate_spiceinit()
     netlist_filename = gen.generate_netlist()
-
-    # subprocess.run(
-    #     ["ngspice", "-b", netlist_filename],
-    #     cwd=build_dir,
-    #     env = env
-    # )
-
-    # gen.set_model_type(ModelType.PARAMSET)
-    # gen.clean_build()
-    # gen.generate_spiceinit()
-    # netlist_filename = gen.generate_netlist()
-    #
-    # subprocess.run(
-    #     ["ngspice", "-b", netlist_filename],
-    #     cwd=build_dir,
-    #     check=True
-    # )
 
 
 

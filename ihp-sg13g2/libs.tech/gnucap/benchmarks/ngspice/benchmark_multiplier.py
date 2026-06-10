@@ -5,14 +5,14 @@ from gen_multiplier import C6288Generator
 
 def benchmark_multiplier():
 
-    gen = C6288Generator()
-    bm = Benchmarker(build_dir)
+    gen = C6288Generator(tran_stop=2.0)
+    bm = Benchmarker(build_dir, repeat=1)
 
     configs = []
 
     for model_type in [ModelType.GENERIC, ModelType.PARAMSET]:
         print("Benchmarking model type: ", model_type)
-        out_name = f"bm_moslv_inv_chain_tt_{model_type}.csv"
+        out_name = f"bm_multiplier_tt_{model_type}.csv"
         bm.run(gen, model_type, configs, out_name)
         print("")
 
