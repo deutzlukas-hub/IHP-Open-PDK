@@ -34,7 +34,7 @@ class InverterChainGenerator(BaseNetlistGenerator):
         super().__init__()
 
     @property
-    def title(self):
+    def title(self) -> str:
         return "* CMOS inverter chain"
 
     @property

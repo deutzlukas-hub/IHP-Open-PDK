@@ -70,13 +70,20 @@ def plot_tb_moslv_ring_osc(show: bool=False):
         t_arr_sp_param = data_sp_param[:, 0] / 1e-9
         t_arr_sp_gener = data_sp_gener[:, 0] / 1e-9
 
+        num_cycles_display = 5
+        T = t_arr_sp_param[-1] / 20
+        t_limit = num_cycles_display * T
+
+        idx_arr_param = t_arr_sp_param < t_limit
+        idx_arr_gener = t_arr_sp_gener < t_limit
+
         vout_arr_param = data_sp_param[:, 1]
         vout_arr_gener = data_sp_gener[:, 1]
 
         color = cmap(norm(num_inv))
 
-        ax_i.plot(t_arr_sp_param, vout_arr_param, ls="-", color=color, lw=2.0, label=f"vout, N={num_inv}")
-        ax_i.plot(t_arr_sp_gener, vout_arr_gener, ls="--", color="k", lw=2.0, label=f"vout, N={num_inv}")
+        ax_i.plot(t_arr_sp_param[idx_arr_param], vout_arr_param[idx_arr_param], ls="-", color=color, lw=2.0, label=f"vout, N={num_inv}")
+        ax_i.plot(t_arr_sp_gener[idx_arr_gener], vout_arr_gener[idx_arr_gener], ls="--", color="k", lw=2.0, label=f"vout, N={num_inv}")
 
     # Read benchmark dataruntime
     filepath_sp_param = bm_dir_sp / f"bm_moslv_ring_osc_tt_generic.csv"

@@ -1,5 +1,5 @@
 import os
-import shlex
+import itertools
 import timeit
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
@@ -21,6 +21,7 @@ class Benchmarker():
 
         self.test_dir = test_dir
         self.bm_dir = Path("bm")
+        self.log_dir = Path("log")
 
         self.repeat = repeat
         self.number = number
@@ -36,7 +37,7 @@ class Benchmarker():
 
         print(f"wrote {out_path}")
 
-    def run_ngspice(self, test_name) -> None:
+    def run_ngspice(self, test_name, run_counter) -> None:
 
         env = os.environ.copy()
         env["PDK_ROOT"] = str(Path.home() / "git/IHP-Open-PDK")
@@ -51,13 +52,16 @@ class Benchmarker():
                 text=True,
             )
         else:
-            proc = subprocess.run(
-                ["ngspice", "-b", test_name],
-                cwd=self.test_dir,
-                env=env,
-                stdout=subprocess.DEVNULL,
-                stderr=subprocess.DEVNULL,
-            )
+            log_file = self.log_dir / f"{test_name}_run{run_counter}.log"
+
+            with open(log_file, "w") as f:
+                proc = subprocess.run(
+                    ["ngspice", "-b", test_name],
+                    cwd=self.test_dir,
+                    env=env,
+                    stdout=f,
+                    stderr=subprocess.DEVNULL,
+                )
 
         if proc.returncode != 0:
             if self.debug:
@@ -74,10 +78,12 @@ class Benchmarker():
         print(f"→ {test_name}: STARTED")
 
         # Warm-up run (not recorded)
-        self.run_ngspice(test_name)
+        self.run_ngspice(test_name, 0)
+
+        counter = itertools.count()
 
         times = timeit.repeat(
-                stmt = lambda: self.run_ngspice(test_name),
+                stmt = lambda: self.run_ngspice(test_name, next(counter)),
                 repeat = self.repeat,
                 number= self.number
         )
@@ -149,6 +155,10 @@ class Benchmarker():
 
         for config in configs:
             test_name = generator.generate_netlist(**config)
+            test_names.append(test_name)
+
+        if not configs:
+            test_name = generator.generate_netlist()
             test_names.append(test_name)
 
         results = self.benchmark_many(test_names, workers=workers)
