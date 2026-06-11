@@ -1,0 +1,61 @@
+
+Note: No compatibility mode selected!
+
+
+Circuit: * c6288 16x16 multiplier* iscas-85 benchmark circuit
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using KLU as Direct Linear Solver
+Warning: singular matrix:  check node n.x1.xnor2_878.xmn2.nsg13_lv_nmos#NOI
+
+Note: Starting dynamic gmin stepping
+Note: Dynamic gmin stepping completed
+
+No. of Data Rows : 514
+Total elapsed time (seconds) = 68.477 
+Total DRAM available = 128510.789 MB.
+DRAM currently available = 10905.613 MB.
+Maximum ngspice program size = 1100.758 MB.
+Current ngspice program size =  561.219 MB.
+
+Shared ngspice pages =   11.734 MB.
+Text (code) pages =    5.875 MB.
+Stack = 0 bytes.
+Library pages =  631.391 MB.
+
+Number of lines in the deck = 1142616
+Netlist loading time = 0.0086515
+Subckt and Param expansion time = 8.4753
+Netlist parsing time = 6.26242
+
+Nominal temperature = 27
+Operating temperature = 27
+Total iterations = 2316
+Transient iterations = 1477
+Circuit Equations = 35493
+Circuit original non-zeroes = 214646
+Circuit fill-in non-zeroes = 2258
+Circuit total non-zeroes = 216904
+Transient timepoints = 514
+Accepted timepoints = 514
+Rejected timepoints = 0
+Total analysis time (seconds) = 59.991
+Matrix load time = 52.6675
+Matrix synchronize time = 0
+Matrix reorder time = 0.0319809
+Matrix factor time = 3.70345
+Matrix solve time = 1.0009
+Transient analysis time = 38.4025
+Transient load time = 33.2917
+Transient sync time = 0
+Transient factor time = 2.34827
+Transient solve time = 0.63778
+Transient trunc time = 0.975518
+Transient iterations for the last time point = 0
+AC analysis time = 0
+AC load time = 0
+AC sync time = 0
+AC factor time = 0
+AC solve time = 0
+ngspice-46 done

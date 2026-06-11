@@ -1,0 +1,12 @@
+
+Note: No compatibility mode selected!
+
+
+Circuit: * c6288 16x16 multiplier* iscas-85 benchmark circuit
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using KLU as Direct Linear Solver
+Warning: singular matrix:  check node n.x1.xnor2_636.nmp1#NOI
+
+Note: Starting dynamic gmin stepping
