@@ -56,10 +56,10 @@ define DIR_CHECK_RULE
 check-$(1): $(foreach f, $(filter $(1)/%.sp, $(ALL_TESTS)), $(dir $(f))check/$(notdir $(f)).out)
 endef
 # Create one aggregate per directory in TESTDIRS using DIR_RULE
-$(foreach d, $(TESTDIRS), $(eval $(call DIR_CECK_RULE,$(d))))
+$(foreach d, $(TESTDIRS), $(eval $(call DIR_CHECK_RULE,$(d))))
 
 define BENCH_RULE
-$(dir $(1))log/$(notdir $(1)).$(2).log: $(1)
+$(dir $(1))logs/$(notdir $(1)).$(2).log: $(1)
 	@mkdir -p $(dir $(1))logs
 	@echo "Running $(notdir $(1)) (run $(2)/$(REPEATS))"
 	@cd "$(dir $(1))" && \
