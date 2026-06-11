@@ -58,22 +58,23 @@ endef
 # Create one aggregate per directory in TESTDIRS using DIR_RULE
 $(foreach d, $(TESTDIRS), $(eval $(call DIR_CHECK_RULE,$(d))))
 
+# Rule: one test file *.sp generates #REPEATS *.sp.{run}.log files
 define BENCH_RULE
 $(dir $(1))logs/$(notdir $(1)).$(2).log: $(1)
 	@mkdir -p $(dir $(1))logs
-	@echo "Running $(notdir $(1)) (run $(2)/$(REPEATS))"
+	@printf "%-30s [%s/%s]\n" "$(notdir $(1))" "$(2)" "$(REPEATS)"
 	@cd "$(dir $(1))" && \
 	  $(NGSPICE) -b -o "logs/$(notdir $(1)).$(2).log" "$(notdir $(1))" > /dev/null
 endef
 
-# Create one log file target for each test and run
+# Create one log file target per run for each test
 $(foreach f, $(ALL_TESTS), $(foreach run, $(RUNS), $(eval $(call BENCH_RULE,$(f),$(run)))))
 
 # Rule: Make each test directory an aggregate target for its test
 define DIR_BENCH_RULE
 bench-$(1): $(foreach f, $(filter $(1)/%.sp, $(ALL_TESTS)), \
 				$(foreach n, $(RUNS), \
-					$(dir $(f))log/$(notdir $(f)).$(n).log))
+					$(dir $(f))logs/$(notdir $(f)).$(n).log))
 endef
 
 # Create one aggregate per directory in TESTDIRS using DIR_RULE
