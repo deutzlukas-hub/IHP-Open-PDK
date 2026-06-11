@@ -58,7 +58,9 @@ class InverterChainGenerator(BaseNetlistGenerator):
 
     @property
     def options(self) -> dict[str, str]:
-        return {"reltol": "1e-4"}
+        return {
+            "klu": None,
+            "reltol": "1e-4"}
 
     def add_netlist(self) -> None:
 
