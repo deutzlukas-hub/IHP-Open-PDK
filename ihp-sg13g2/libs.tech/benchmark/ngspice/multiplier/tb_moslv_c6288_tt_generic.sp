@@ -80,7 +80,7 @@ xvb15 b15 0 v01
   * write output to file
   set wr_vecnames
   set wr_singlescale
-  wrdata check/tb_moslv_c6288_tt_generic_generic.sp.out
+  wrdata check/tb_moslv_c6288_tt_generic.sp.out
 +    v(a0) v(a1) v(a2) v(a3) v(a4) v(a5) v(a6) v(a7)
 +    v(a8) v(a9) v(a10) v(a11) v(a12) v(a13) v(a14) v(a15)
 +    v(b0) v(b1) v(b2) v(b3) v(b4) v(b5) v(b6) v(b7)

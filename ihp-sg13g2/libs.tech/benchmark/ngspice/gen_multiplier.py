@@ -151,7 +151,7 @@ class C6288Generator(BaseNetlistGenerator):
             self.lines.append( "  * write output to file")
             self.lines.append( "  set wr_vecnames")
             self.lines.append( "  set wr_singlescale")
-            self.lines.append(f"  wrdata check/{self.net_name}_{self.model_type}.sp.out")
+            self.lines.append(f"  wrdata check/{self.net_name}.sp.out")
             self.lines.append(  "+    v(a0) v(a1) v(a2) v(a3) v(a4) v(a5) v(a6) v(a7)")
             self.lines.append(  "+    v(a8) v(a9) v(a10) v(a11) v(a12) v(a13) v(a14) v(a15)")
             self.lines.append(  "+    v(b0) v(b1) v(b2) v(b3) v(b4) v(b5) v(b6) v(b7)")
