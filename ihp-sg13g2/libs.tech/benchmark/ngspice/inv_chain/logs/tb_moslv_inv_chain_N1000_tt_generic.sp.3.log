@@ -1,0 +1,59 @@
+
+Note: No compatibility mode selected!
+
+
+Circuit: * cmos inverter chain
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using KLU as Direct Linear Solver
+Note: Starting dynamic gmin stepping
+Note: Dynamic gmin stepping completed
+
+No. of Data Rows : 3068
+Total elapsed time (seconds) = 78.688 
+Total DRAM available = 15615.586 MB.
+DRAM currently available = 4669.066 MB.
+Maximum ngspice program size =  839.562 MB.
+Current ngspice program size =  313.824 MB.
+
+Shared ngspice pages =   10.211 MB.
+Text (code) pages =    5.859 MB.
+Stack = 0 bytes.
+Library pages =  372.363 MB.
+
+Number of lines in the deck = 227052
+Netlist loading time = 0.00711457
+Subckt and Param expansion time = 2.40646
+Netlist parsing time = 1.84234
+
+Nominal temperature = 27
+Operating temperature = 27
+Total iterations = 17120
+Transient iterations = 16411
+Circuit Equations = 7005
+Circuit original non-zeroes = 34006
+Circuit fill-in non-zeroes = -2004
+Circuit total non-zeroes = 32002
+Transient timepoints = 4320
+Accepted timepoints = 3068
+Rejected timepoints = 1252
+Total analysis time (seconds) = 76.2723
+Matrix load time = 58.7715
+Matrix synchronize time = 0
+Matrix reorder time = 0.00633648
+Matrix factor time = 7.18076
+Matrix solve time = 2.54425
+Transient analysis time = 73.6539
+Transient load time = 56.6426
+Transient sync time = 0
+Transient factor time = 6.88335
+Transient solve time = 2.44334
+Transient trunc time = 4.12717
+Transient iterations for the last time point = 0
+AC analysis time = 0
+AC load time = 0
+AC sync time = 0
+AC factor time = 0
+AC solve time = 0
+ngspice-46 done
