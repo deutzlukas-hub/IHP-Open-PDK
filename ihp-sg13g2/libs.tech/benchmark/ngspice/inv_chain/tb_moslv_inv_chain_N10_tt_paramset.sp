@@ -13,8 +13,8 @@ VIN in 0 PWL(0 0 10n 0 11n 1.2 100.0n 1.2)
 
 * Inverter subcircuit
 .subckt inv in out vdd gnd
-X1 out in vdd vdd sg13_lv_pmos w=2.8e-07 l=3.4e-07 rfmode=0
-X2 out in gnd gnd sg13_lv_nmos w=3.5e-07 l=3.4e-07 rfmode=0
+X1 out in vdd vdd sg13_lv_pmos w=1e-06 l=2e-07 rfmode=0
+X2 out in gnd gnd sg13_lv_nmos w=5e-07 l=2e-07 rfmode=0
 .ends
 
 * Inverter instances
