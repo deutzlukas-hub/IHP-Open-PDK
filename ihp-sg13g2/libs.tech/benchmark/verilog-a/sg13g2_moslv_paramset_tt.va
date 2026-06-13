@@ -71,7 +71,6 @@
 
 // Generated from SPICE model card sg13g2_lv_nmos_psp in sg13g2_moslv_parm.lib
 paramset sg13g2_lv_nmos_psp_model PSP103VA
-    (* type = "instance" *) parameter integer rfmode = 0 from [0:0];
     (* type = "instance" *) parameter real w = 0.35u;
     (* type = "instance" *) parameter real l = 0.34u;
     (* type = "instance" *) parameter integer nf = 1;
