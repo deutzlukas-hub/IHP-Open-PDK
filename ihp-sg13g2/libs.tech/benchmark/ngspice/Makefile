@@ -80,6 +80,14 @@ endef
 # Create one aggregate per directory in TESTDIRS using DIR_RULE
 $(foreach d, $(TESTDIRS), $(eval $(call DIR_BENCH_RULE,$(d))))
 
+# Rule: Make each test file an aggregate target for benchmarking (bench-<testname>)
+define TEST_BENCH_RULE
+bench-$(basename $(notdir $(1))): $(foreach n, $(RUNS), $(dir $(1))logs/$(notdir $(1)).$(n).log)
+endef
+
+# Create one bench target per test file
+$(foreach f, $(ALL_TESTS), $(eval $(call TEST_BENCH_RULE,$(f))))
+
 clean:
 	@for dir in $(TESTDIRS); do \
 	  rm -rf $$dir/check; \
@@ -95,6 +103,7 @@ help:
 	@echo "  check-<testdir>  - Run tests in specified directory"
 	@echo "  bench            - Run all tests REPEATS time and log performance"
 	@echo "  bench-<testdir>  - Benchmark tests in specified directory"
+	@echo "  bench-<testname> - Benchmark a specific test file REPEATS times"
 	@echo ""
 	@echo "Test directories:"
 	@for dir in $(TESTDIRS); do echo "  $$dir"; done

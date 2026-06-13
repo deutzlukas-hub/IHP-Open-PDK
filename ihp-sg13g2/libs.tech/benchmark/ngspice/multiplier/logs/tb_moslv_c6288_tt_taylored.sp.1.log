@@ -10,3 +10,52 @@ Using KLU as Direct Linear Solver
 Warning: singular matrix:  check node n.x1.xnor2_636.nmp1#NOI
 
 Note: Starting dynamic gmin stepping
+Note: Dynamic gmin stepping completed
+
+No. of Data Rows : 514
+Total elapsed time (seconds) = 66.035 
+Total DRAM available = 15615.586 MB.
+DRAM currently available =  699.316 MB.
+Maximum ngspice program size =  659.582 MB.
+Current ngspice program size =  120.668 MB.
+
+Shared ngspice pages =   10.426 MB.
+Text (code) pages =    5.859 MB.
+Stack = 0 bytes.
+Library pages =  192.344 MB.
+
+Number of lines in the deck = 15089
+Netlist loading time = 0.0103238
+Subckt and Param expansion time = 0.0618495
+Netlist parsing time = 0.0378877
+
+Nominal temperature = 27
+Operating temperature = 27
+Total iterations = 2316
+Transient iterations = 1477
+Circuit Equations = 35493
+Circuit original non-zeroes = 214646
+Circuit fill-in non-zeroes = 11894
+Circuit total non-zeroes = 226540
+Transient timepoints = 514
+Accepted timepoints = 514
+Rejected timepoints = 0
+Total analysis time (seconds) = 65.9564
+Matrix load time = 46.1928
+Matrix synchronize time = 0
+Matrix reorder time = 0.0617055
+Matrix factor time = 11.7432
+Matrix solve time = 2.9032
+Transient analysis time = 47.7022
+Transient load time = 32.7929
+Transient sync time = 0
+Transient factor time = 8.26757
+Transient solve time = 2.06075
+Transient trunc time = 3.08815
+Transient iterations for the last time point = 0
+AC analysis time = 0
+AC load time = 0
+AC sync time = 0
+AC factor time = 0
+AC solve time = 0
+ngspice-46 done

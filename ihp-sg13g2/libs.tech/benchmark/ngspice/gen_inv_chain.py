@@ -132,7 +132,7 @@ if __name__ == "__main__":
 
     from base_generator import ModelType
 
-    num_inv_list = [10, 50, 100, 500, 1000]
+    num_inv_list = [10, 50, 100, 500, 1000, 2000]
     gen = InverterChainGenerator(wrdata=True, load_osdi_in_control=True)
     gen.clean_build()
 

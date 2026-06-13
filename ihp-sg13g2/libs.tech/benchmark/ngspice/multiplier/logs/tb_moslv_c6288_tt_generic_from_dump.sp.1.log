@@ -7,27 +7,27 @@ Circuit: * c6288 16x16 multiplier* iscas-85 benchmark circuit
 Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
 
 Using KLU as Direct Linear Solver
-Warning: singular matrix:  check node n.x1.xnor2_878.xmn2.nsg13_lv_nmos#NOI
+Warning: singular matrix:  check node n.x1.xnor2_901.xmp1.nsg13_lv_pmos#NOI
 
 Note: Starting dynamic gmin stepping
 Note: Dynamic gmin stepping completed
 
 No. of Data Rows : 514
-Total elapsed time (seconds) = 74.233 
+Total elapsed time (seconds) = 67.853 
 Total DRAM available = 15615.586 MB.
-DRAM currently available =  369.234 MB.
-Maximum ngspice program size = 1098.703 MB.
-Current ngspice program size =  560.488 MB.
+DRAM currently available =  966.801 MB.
+Maximum ngspice program size = 1098.707 MB.
+Current ngspice program size =  560.699 MB.
 
-Shared ngspice pages =   10.125 MB.
+Shared ngspice pages =   10.332 MB.
 Text (code) pages =    5.859 MB.
 Stack = 0 bytes.
-Library pages =  631.500 MB.
+Library pages =  631.504 MB.
 
 Number of lines in the deck = 1142616
-Netlist loading time = 0.025941
-Subckt and Param expansion time = 11.6483
-Netlist parsing time = 8.87374
+Netlist loading time = 0.0223988
+Subckt and Param expansion time = 11.4644
+Netlist parsing time = 8.78935
 
 Nominal temperature = 27
 Operating temperature = 27
@@ -40,18 +40,18 @@ Circuit total non-zeroes = 216904
 Transient timepoints = 514
 Accepted timepoints = 514
 Rejected timepoints = 0
-Total analysis time (seconds) = 62.5489
-Matrix load time = 47.1958
+Total analysis time (seconds) = 56.3559
+Matrix load time = 41.846
 Matrix synchronize time = 0
-Matrix reorder time = 0.0520604
-Matrix factor time = 8.54709
-Matrix solve time = 2.33257
-Transient analysis time = 43.0472
-Transient load time = 32.1589
+Matrix reorder time = 0.0610866
+Matrix factor time = 7.99634
+Matrix solve time = 2.19297
+Transient analysis time = 37.8926
+Transient load time = 27.6577
 Transient sync time = 0
-Transient factor time = 5.59527
-Transient solve time = 1.5229
-Transient trunc time = 2.48491
+Transient factor time = 5.17071
+Transient solve time = 1.42421
+Transient trunc time = 2.38504
 Transient iterations for the last time point = 0
 AC analysis time = 0
 AC load time = 0
