@@ -2,7 +2,7 @@
 # (c) Felix Salfelder 2024
 #     Lukas Deutz 2026
 # GPLv3+
-NGSPICE = ngspice
+NGSPICE ?= ngspice
 DIFF = diff
 # Exclude test files starting with
 TEST_EXCLUDE_PREFIX = wip_
@@ -10,7 +10,8 @@ TEST_EXCLUDE_PREFIX = wip_
 MAKEFLAGS += -B
 
 REPEATS ?= 5
-RUNS := $(shell seq 1 $(REPEATS))
+# Start at 0 to have 1 warmup run
+RUNS := $(shell seq 0 $(REPEATS))
 
 TESTDIRS = \
 	inv_chain \

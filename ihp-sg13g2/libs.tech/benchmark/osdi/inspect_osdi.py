@@ -39,14 +39,15 @@ class OsdiFile():
 
         self.Descriptor = osdi.struct_OsdiDescriptor
 
-        mode = 0
+        mode = os.RTLD_LOCAL
         if hasattr(os, "RTLD_NOW"):
             mode |= os.RTLD_NOW
         else:
             assert False
 
         # load osdi
-        self.osdi_lib = ctypes.CDLL(str(self.osdi_file_path), mode=mode)
+        path = self.osdi_file_path.resolve(strict=True)
+        self.osdi_lib = ctypes.CDLL(str(path), mode=mode)
         # OSDI 0.4 should have this
         self.OSDI_VERSION_MAJOR = self.uint32("OSDI_VERSION_MAJOR")
         self.OSDI_VERSION_MINOR = self.uint32("OSDI_VERSION_MINOR")
@@ -221,9 +222,9 @@ class OsdiFile():
         print(f'num_model_params: {desc["num_model_params"]}')
         print(f'num_opvars: {desc["num_opvars"]}')
 
-    def print_params(self, idx, kind: str = "model"):
+    def print_params(self, idx, kind: str = "model", type=None):
         desc = self.descriptors[idx]
-        print(f'Parameters of descriptor {idx}: {desc["name"]:} \n')
+        print(f'{kind} parameters of descriptor {idx}: {desc["name"]:} \n')
 
         if kind == "instance":
             params = desc["instance_parameters"]
@@ -233,12 +234,16 @@ class OsdiFile():
             params = desc["opvars"]
 
         for param in params:
+            if type is not None:
+                if param["type"] != type:
+                    continue
+
             print(f'  {param["name"]}: {param["type"]} {param["kind"]}')
 
 
 def inspect_psp103():
 
-    osdi_path = Path("../osdi/psp103.osdi")
+    osdi_path = Path("psp103.osdi")
     osdi = OsdiFile(osdi_path)
     osdi.print_descriptors()
     osdi.print_param_meta_data(0)
@@ -246,34 +251,94 @@ def inspect_psp103():
 
 def inspect_paramset():
 
-    osdi_path = Path("../osdi/sg13g2_moslv.osdi")
+    osdi_path = Path("sg13g2_moslv.osdi")
     osdi = OsdiFile(osdi_path)
     osdi.print_descriptors()
     osdi.print_param_meta_data(0)
     osdi.print_memory_footprint(0)
     osdi.print_param_meta_data(1)
     osdi.print_memory_footprint(1)
+
+def inspect_paramset_fixed():
+
+    osdi_path = Path("sg13g2_moslv.osdi")
+    osdi = OsdiFile(osdi_path)
+    osdi.print_descriptors()
+    osdi.print_param_meta_data(0)
+    osdi.print_memory_footprint(0)
+    osdi.print_param_meta_data(1)
+    osdi.print_memory_footprint(1)
+
+def inspect_fixed_paramset():
+
+    osdi_path = Path("sg13g2_moslv_fixed.osdi")
+    osdi = OsdiFile(osdi_path)
+    osdi.print_descriptors()
+    osdi.print_param_meta_data(0)
+    osdi.print_memory_footprint(0)
+    osdi.print_param_meta_data(1)
+    osdi.print_memory_footprint(1)
+
 
 def inspect_taylored():
 
-    osdi_path = Path("../osdi/sg13g2_moslv_mult.osdi")
+    osdi_path = Path("sg13g2_moslv_mult.osdi")
     osdi = OsdiFile(osdi_path)
     osdi.print_descriptors()
     osdi.print_param_meta_data(0)
     osdi.print_memory_footprint(0)
     osdi.print_param_meta_data(1)
     osdi.print_memory_footprint(1)
+
+def psp103_params():
+
+    osdi_path = Path("./psp103.osdi")
+    osdi = OsdiFile(osdi_path)
+    osdi.print_param_meta_data(0)
+    osdi.print_params(0, "instance", type="integer")
+    osdi.print_params(0, "model", type="integer")
+
+def fixed_paramset_params():
+
+    osdi_path = Path("sg13g2_moslv_fixed.osdi")
+    osdi = OsdiFile(osdi_path)
+    osdi.print_param_meta_data(0)
+    osdi.print_params(0, "instance")
+    osdi.print_params(0, "model")
+
+
+
+def sg13g2_moslv_paramset_tt_params():
+
+    osdi_path = Path("sg13g2_moslv.osdi")
+    osdi = OsdiFile(osdi_path)
+    osdi.print_param_meta_data(0)
+    osdi.print_params(0, "instance")
+    osdi.print_params(0, "model")
 
 def main():
 
     pass
 
-
 if __name__ == "__main__":
 
-    inspect_psp103()
-    inspect_paramset()
-    inspect_taylored()
+    # inspect_psp103()
+    # inspect_paramset()
+    # inspect_paramset_fixed()
+    # inspect_taylored()
 
+    # psp103_params()
+    # sg13g2_moslv_paramset_tt_params()
+    # fixed_paramset_params()
 
+    osdi_path = Path("psp103.osdi")
+    osdi_file = OsdiFile(osdi_path)
+    osdi_file.print_param_meta_data(0)
+
+    print("")
+    print("")
+
+    osdi_path = Path("sg13g2_moslv_fixed.osdi")
+    osdi_file = OsdiFile(osdi_path)
+    osdi_file.print_param_meta_data(0)
 

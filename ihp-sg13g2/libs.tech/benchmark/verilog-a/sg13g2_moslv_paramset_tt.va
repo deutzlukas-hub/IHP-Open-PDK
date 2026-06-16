@@ -84,7 +84,6 @@ paramset sg13g2_lv_nmos_psp_model PSP103VA
     (* type = "instance" *) parameter real delvto = 0.0;
     (* type = "instance" *) parameter real factuo = 1.0;
     (* type = "instance" *) parameter real pre_layout = 1.0;
-    (* type = "instance" *) parameter real swsoa = 0.0;
     .LEVEL = 103.8.2;
     .TYPE = 1;
     .MULT = mult;
@@ -460,7 +459,7 @@ paramset sg13g2_lv_nmos_psp_model PSP103VA
     .RSH = 0.0;
     .RSHD = 0.0;
     .CFRW = 2e-16 / nf;
-    .SWSOA = swsoa;
+    .SWSOA = 0;
     .VGS_MAX = 1.6;
     .VGD_MAX = 1.6;
     .VGB_MAX = 1.6;
@@ -471,7 +470,6 @@ endparamset
 
 //Generated from SPICE model card sg13g2_lv_pmos_psp in sg13g2_moslv_parm.lib
 paramset sg13g2_lv_pmos_psp_model PSP103VA
-    (* type = "instance" *) parameter integer rfmode = 0 from [0:0];
     (* type = "instance" *) parameter real w = 0.28u;
     (* type = "instance" *) parameter real l = 0.35u;
     (* type = "instance" *) parameter integer nf = 1;
@@ -485,7 +483,6 @@ paramset sg13g2_lv_pmos_psp_model PSP103VA
     (* type = "instance" *) parameter real delvto = 0.0;
     (* type = "instance" *) parameter real factuo = 1.0;
     (* type = "instance" *) parameter real pre_layout = 1.0;
-    (* type = "instance" *) parameter real swsoa = 0.0;
     .LEVEL = 103.8.2;
     .TYPE = -1;
     .MULT = mult;
@@ -861,7 +858,7 @@ paramset sg13g2_lv_pmos_psp_model PSP103VA
     .RSH = 0.0;
     .RSHD = 0.0;
     .CFRW = 1e-16 / nf;
-    .SWSOA = swsoa;
+    .SWSOA = 0;
     .VGS_MAX = 1.6;
     .VGD_MAX = 1.6;
     .VGB_MAX = 1.6;
