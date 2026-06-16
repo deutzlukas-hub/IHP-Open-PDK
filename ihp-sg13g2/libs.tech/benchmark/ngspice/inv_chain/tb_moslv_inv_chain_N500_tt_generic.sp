@@ -9,7 +9,7 @@
 .options reltol=1e-4
 
 VDD vdd 0 1.2
-VIN in 0 PWL(0 0 10n 0 11n 1.2 100.0n 1.2)
+VIN in 0 PULSE(0 1.2 10n 100p 100p 10n 20n)
 
 * Inverter subcircuit
 .subckt inv in out vdd gnd
@@ -526,7 +526,7 @@ CL out 0 1e-14
   * load osdi files
   pre_osdi ../../osdi/psp103.osdi
 
-  tran 1e-10 1e-07 0 1e-10
+  tran 0.1n 210n 0 0.1n
 
   * print performance and resource usage
   rusage all
