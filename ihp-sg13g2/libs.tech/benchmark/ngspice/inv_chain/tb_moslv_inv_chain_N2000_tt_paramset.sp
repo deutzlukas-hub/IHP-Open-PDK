@@ -2024,7 +2024,7 @@ CL out 0 1e-14
 
 .control
   * load osdi files
-  pre_osdi ../../osdi/sg13g2_moslv_nolocal.osdi
+  pre_osdi ../../osdi/sg13g2_moslv.osdi
 
   tran 1e-10 1e-07 0 1e-10
 
