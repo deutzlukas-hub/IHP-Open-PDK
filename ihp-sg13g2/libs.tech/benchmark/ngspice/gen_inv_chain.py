@@ -23,7 +23,7 @@ class InverterChainGenerator(BaseNetlistGenerator):
         pulse_width: float = "10n",
         pulse_period: float = "20n",
         # transient
-        tran_stop: float = "210n",
+        tran_stop: float = "110n",
         tran_step: float = "0.1n",
         tran_max: float = "0.1n",
     ):
@@ -224,10 +224,8 @@ if __name__ == "__main__":
 
     # num_inv_list = [500, 1000, 2000, 4000]
     num_inv_list = [10, 50, 100] # , 2000, 4000]
-    gen = InverterChainGenerator(wrdata=True, input="pulse")
+    gen = InverterChainGenerator(wrdata=False, input="pulse")
     #gen.clean_build()
-
-    input = "pulse"
 
     for rf_mode in [0, 1]:
         for model_type in [ModelType.GENERIC, ModelType.PARAMSET, ModelType.TAILORED_PARAMSET]:
