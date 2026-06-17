@@ -1,14 +1,30 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# build from generic
+
+# ------------------------------------------------------------------------------
+# psp103 vanilla
+
+# build generic
 openvaf-r ./psp103/psp103.va -o ../osdi/psp103.osdi
-## build dummped generic for debugging
-#openvaf-r psp103.dump.va -o ../osdi/psp103_from_dump.osdi
-# build from paramset dump
-openvaf-r sg13g2_moslv_paramset_tt_nolocal.dump.va -o ../osdi/sg13g2_moslv.osdi
-# build from multiplier paramset dump
-openvaf-r sg13g2_moslv_paramset_tt_mult_nolocal.dump.va -o ../osdi/sg13g2_moslv_mult.osdi
-# build from inv_chain paramset dump
-openvaf-r sg13g2_moslv_paramset_tt_inv_chain_nolocal.dump.va -o ../osdi/sg13g2_moslv_inv_chain.osdi
+
+# build all purpose paramset
+openvaf-r sg13g2_moslv_paramset_tt.dump.nolocal.va -o ../osdi/sg13g2_moslv.osdi
+
+# build tailored paramset dump
+openvaf-r sg13g2_moslv_paramset_tt_tailored.dump.nolocal.va -o ../osdi/sg13g2_moslv_tailored.osdi
+
+# ------------------------------------------------------------------------------
+# psp103 nqs
+
+# build generic
+openvaf-r ./psp103/psp103_nqs.va -o ../osdi/psp103_nqs.osdi
+
+# build all purpose paramset
+
+# openvaf-r sg13g2_moslv_rf_paramset_tt.dump.nolocal.va -o ../osdi/sg13g2_moslv_rf.osdi
+
+# build tailored paramset
+openvaf-r sg13g2_moslv_rf_paramset_tt_tailored.dump.nolocal.va -o ../osdi/sg13g2_moslv_rf_tailored.osdi
+
 

@@ -16,6 +16,7 @@ RUNS := $(shell seq 0 $(REPEATS))
 TESTDIRS = \
 	inv_chain \
 	multiplier \
+	inv_finger \
 
 # Discover tests automatically: resistor/*.sp, moslv/*.sp, ...
 ALL_TESTS := $(foreach d, $(TESTDIRS), $(wildcard $(d)/*.sp))

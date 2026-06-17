@@ -1,92 +1,42 @@
 //******************************************************************************
-//                                                                             *
-// Library:      SG13G2_dev                                                    *
-// Technologies: SG13G2                                                        *
-//                                                                             *
-// Model:        PSP 103.8.2                                                   *
-// Revision:     200310                                                        *
-//                                                                             *
-//******************************************************************************
-//                                                                             *
-// Copyright 2023 IHP PDK Authors                                              *
-//                                                                             *
-// Licensed under the Apache License, Version 2.0 (the "License");             *
-// you may not use this file except in compliance with the License.            *
-// You may obtain a copy of the License at                                     *
-//                                                                             *
-//     https://www.apache.org/licenses/LICENSE-2.0                             *
-//                                                                             *
-// Unless required by applicable law or agreed to in writing, software         *
-// distributed under the License is distributed on an "AS IS" BASIS,           *
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.    *
-// See the License for the specific language governing permissions and         *
-// limitations under the License.                                              *
-//                                                                             *
-//******************************************************************************
-//
-//
-//******************************************************************************
-//                                                                             *
-//                                                                             *
-//                      M O D E L  P A R A M E T E R S                         *
-//                                                                             *
-//                                                                             *
-//******************************************************************************
-//
-//
-//
-//
-//
-//
-//
-//******************************************************************************
-//
-// Low Voltage (lv) MOS Transistors
-//
-// Model:                                PSP 103.6
-// Date:                                 10.03.2020
-// Lot:                                  EDJ809
-// WAFER:                                06
-// CHIP Nr:                              x=3, y=9
-// Device:                               SG13G2
-// Maximum drain-source voltage:         1.5
-// Measurement data:
-// Nom. Temperature  (TNOM):             27 grd C
-// Meas. Temperature (TEMP):             27 grd C
-// Valid range for model:                L = (0.13 - 10)um
-//                                       W = (0.15 - 10)um
-//
-//******************************************************************************
-
-// Modifications:
-// - Ported spice model card to Verilog-A paramset
-// - Corner parameters are containered in corner modules in and resolved through
-//   cross referencing at runtime.
-// - Parameterset are nested in structural modules user entry point see
-// Sources: `sg13g2_moshv_param.lib`
-// (c) Lukas Deutz 2026
+// sg13g2_lv moslv PSPNQS103VA paramsets
+// See `sg13g2_lv moslv_paramset.va` for the moslv paramset documentation
 
 `pragma modelgen nodump-module
-`include "psp103.va"
+`include "psp103_nqs.va"
 
-// Generated from SPICE model card sg13g2_lv_nmos_psp in sg13g2_moslv_parm.lib
-paramset sg13g2_lv_nmos_psp_model PSP103VA
-    // instance params
-    .LEVEL = 103.8.2;
+//******************************************************************************
+// nmos
+paramset sg13g2_lv_nmos_psp_rf_model PSPNQS103VA
+    (* type = "instance" *) parameter integer rfmode = 1 from [0:1];
+    (* type = "instance" *) parameter real w = 0.35u;
+    (* type = "instance" *) parameter real l = 0.34u;
+    (* type = "instance" *) parameter integer nf = 1;
+    (* type = "instance" *) parameter real mult = 1.0;
+    (* type = "instance" *) parameter real as = 0.0;
+    (* type = "instance" *) parameter real ad = 0.0;
+    (* type = "instance" *) parameter real ps = 0.0;
+    (* type = "instance" *) parameter real pd = 0.0;
+    (* type = "instance" *) parameter real dta = 0.0;
+    (* type = "instance" *) parameter real ngcon = 2.0;
+    (* type = "instance" *) parameter real delvto = 0.0;
+    (* type = "instance" *) parameter real factuo = 1.0;
+    (* type = "instance" *) parameter real pre_layout = 1.0;
+    .LEVEL = 103;
     .TYPE = 1;
-    .MULT = 1.0;
-    .W = 0.5u;
-    .L = 0.2u;
-    .NF = 1;
-    .AS = 1.7e-13;
-    .AD = 1.7e-13;
-    .PS = 1.68e-6;
-    .PD = 1.68e-6;
+    .W = w;
+    .L = l;
+    .NF = nf;
+    .MULT = mult;
+    .AS = as;
+    .AD = ad;
+    .PS = ps;
+    .PD = pd;
     .TR = 27.0;
-    .DTA = 0.0;
-    .NGCON = 2.0;
-    .DELVTO = 0.0;
-    .FACTUO = 1.0;
+    .DTA = dta;
+    .NGCON = ngcon;
+    .DELVTO = delvto;
+    .FACTUO = factuo;
     .SWGEO = 1.0;
     .SWIGATE = 1.0;
     .SWIMPACT = 1.0;
@@ -106,8 +56,8 @@ paramset sg13g2_lv_nmos_psp_model PSP103VA
     .WVARL = 0.0;
     .WVARW = 0.0;
     .WOT = -1e-08;
-    .DLQ = -1.3721e-08;
-    .DWQ = -1e-08;
+    .DLQ = -1.3721e-08 - ((1 - pre_layout) * 2e-08) + rfmode * (-1.5368e-08 + (nf < 3 ? 4e-08 : 0));
+    .DWQ = -1e-08 + rfmode * 4.8062e-07;
     .VFBO = -0.94312 * 1.0;
     .VFBL = 0.013965;
     .VFBW = -0.027122;
@@ -157,7 +107,7 @@ paramset sg13g2_lv_nmos_psp_model PSP103VA
     .NPL = 0.0;
     .TOXOVO = 2.2404e-09 * 1.0000;
     .TOXOVDO = 2e-09;
-    .LOV = 2.9423e-08;
+    .LOV = 2.9423e-08 - (1 - pre_layout) * 9e-09;
     .LOVD = 0.0;
     .NOVO = 3.5714e+25;
     .NOVDO = 5e+25;
@@ -254,7 +204,7 @@ paramset sg13g2_lv_nmos_psp_model PSP103VA
     .A4L = 0.0;
     .A4W = 1.581e-16;
     .GCOO = 10.0;
-    .IGINVLW = 121290.0 * (1 + 2.4761e-07 / 0.2e-6) * (1 - 2.1167e-08 / 0.5e-6);
+    .IGINVLW = 121290.0 * (1 + 2.4761e-07 / l) * (1 - 2.1167e-08 / w);
     .IGOVW = 3026.8;
     .IGOVDW = 0.0;
     .STIGO = 2.9949;
@@ -446,7 +396,15 @@ paramset sg13g2_lv_nmos_psp_model PSP103VA
     .DLSIL = 0.0;
     .RSH = 0.0;
     .RSHD = 0.0;
-    .CFRW = 2e-16;
+    .MUNQSO = 1.0;
+    .SWNQS = rfmode * 5.0;
+    .CFRW = ((1 - rfmode) * 2e-16 + rfmode * (1e-18 + pre_layout * (nf > 0 ? 3.8525e-17 : 0))) / nf;
+    .RSHG = rfmode * 3.0;
+    .RGO = rfmode * 40.0;
+    .RBULKO = rfmode * 0.002 * nf / w;
+    .RWELLO = rfmode * 0.002 * nf / w;
+    .RJUNSO = rfmode * 5000.0 * l / w;
+    .RJUNDO = rfmode * 5000.0 * l / w;
     .SWSOA = 0.0;
     .VGS_MAX = 1.6;
     .VGD_MAX = 1.6;
@@ -456,23 +414,38 @@ paramset sg13g2_lv_nmos_psp_model PSP103VA
     .VSB_MAX = 1.6;
 endparamset
 
-//Generated from SPICE model card sg13g2_lv_pmos_psp in sg13g2_moslv_parm.lib
-paramset sg13g2_lv_pmos_psp_model PSP103VA
-    .LEVEL = 103.8.2;
+//******************************************************************************
+// pmos
+paramset sg13g2_lv_pmos_psp_rf_model PSPNQS103VA
+    (* type = "instance" *) parameter integer rfmode = 1 from [0:1];
+    (* type = "instance" *) parameter real w = 0.28u;
+    (* type = "instance" *) parameter real l = 0.35u;
+    (* type = "instance" *) parameter integer nf = 1;
+    (* type = "instance" *) parameter real mult = 1.0;
+    (* type = "instance" *) parameter real as = 0.0;
+    (* type = "instance" *) parameter real ad = 0.0;
+    (* type = "instance" *) parameter real ps = 0.0;
+    (* type = "instance" *) parameter real pd = 0.0;
+    (* type = "instance" *) parameter real dta = 0.0;
+    (* type = "instance" *) parameter real ngcon = 2.0;
+    (* type = "instance" *) parameter real delvto = 0.0;
+    (* type = "instance" *) parameter real factuo = 1.0;
+    (* type = "instance" *) parameter real pre_layout = 1.0;
+    .LEVEL = 103;
     .TYPE = -1;
-    .MULT = 1.0;
-    .W = 1.0u;
-    .L = 0.2u;
-    .NF = 1;
-    .AS = 3.4e-13;
-    .AD = 3.4e-13;
-    .PS = 2.68e-6;
-    .PD = 2.68e-6;
+    .W = w;
+    .L = l;
+    .NF = nf;
+    .MULT = mult;
+    .AS = as;
+    .AD = ad;
+    .PS = ps;
+    .PD = pd;
     .TR = 27.0;
-    .DTA = 0.0;
-    .NGCON = 2.0;
-    .DELVTO = 0.0;
-    .FACTUO = 1.0;
+    .DTA = dta;
+    .NGCON = ngcon;
+    .DELVTO = delvto;
+    .FACTUO = factuo;
     .SWGEO = 1.0;
     .SWIGATE = 1.0;
     .SWIMPACT = 1.0;
@@ -492,8 +465,8 @@ paramset sg13g2_lv_pmos_psp_model PSP103VA
     .WVARL = 0.0;
     .WVARW = 0.0;
     .WOT = 1.5e-08;
-    .DLQ = -9.5922e-08;
-    .DWQ = 1.5e-08;
+    .DLQ = -9.5922e-08 - ((1 - pre_layout) * 3e-08) + rfmode * (-2e-08 + (nf < 3 ? 3.3917e-08 : 0));
+    .DWQ = 1.5e-08 + rfmode * 4.7599e-07;
     .VFBO = -0.88703 * 1.0;
     .VFBL = 0.0089886;
     .VFBW = 0.0071805;
@@ -543,7 +516,7 @@ paramset sg13g2_lv_pmos_psp_model PSP103VA
     .NPL = -0.095923;
     .TOXOVO = 1.9704e-09 * 1.0000;
     .TOXOVDO = 2e-09;
-    .LOV = 2.5254e-08;
+    .LOV = 2.5254e-08 - (1 - pre_layout) * 8.85e-09;
     .LOVD = 0.0;
     .NOVO = 3.104e+25;
     .NOVDO = 5e+25;
@@ -640,7 +613,7 @@ paramset sg13g2_lv_pmos_psp_model PSP103VA
     .A4L = 0.2771;
     .A4W = 0.7101;
     .GCOO = 0.01231;
-    .IGINVLW = 4880.4 * (1 - 5.803e-09 / 0.2e-6) * (1 + 5.1659e-08 / 1.0e-6);
+    .IGINVLW = 4880.4 * (1 - 5.803e-09 / l) * (1 + 5.1659e-08 / w);
     .IGOVW = 1327.0;
     .IGOVDW = 0.0;
     .STIGO = 2.3506;
@@ -832,8 +805,16 @@ paramset sg13g2_lv_pmos_psp_model PSP103VA
     .DLSIL = 0.0;
     .RSH = 0.0;
     .RSHD = 0.0;
-    .CFRW = 1e-16;
-    .SWSOA = 0.0;
+    .MUNQSO = 1.0;
+    .SWNQS = rfmode * 5.0;
+    .CFRW = (1e-16 + rfmode * (1e-18 + pre_layout * (nf > 0 ? 1.2382e-16 : 0))) / nf;
+    .RSHG = rfmode * 20.0;
+    .RGO = rfmode * 22.0;
+    .RBULKO = rfmode * 0.002 * nf / w;
+    .RWELLO = rfmode * 0.001 * nf / w;
+    .RJUNSO = rfmode * 5000.0 * l / w;
+    .RJUNDO = rfmode * 5000.0 * l / w;
+    .SWSOA = 0;
     .VGS_MAX = 1.6;
     .VGD_MAX = 1.6;
     .VGB_MAX = 1.6;

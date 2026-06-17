@@ -11,7 +11,7 @@ from pathlib import Path
 class ModelType(StrEnum):
     GENERIC = "generic"
     PARAMSET = "paramset"
-    TAILORED_PARAMSET = "tailored_paramset"
+    TAILORED_PARAMSET = "tailored"
 
 class BaseNetlistGenerator(ABC):
     """
@@ -59,11 +59,18 @@ class BaseNetlistGenerator(ABC):
 
     def add_includes(self) -> None:
         """Add .include statements."""
+        if self.includes:
+            for include in self.includes:
+                self.lines.append(include)
+            self.lines.append("")
 
-        for include in self.includes:
-            self.lines.append(include)
+    def add_models(self) -> None:
+        """Add .model statements."""
+        if self.models:
+            for model in self.models:
+                self.lines.append(model)
 
-        self.lines.append("")
+            self.lines.append("")
 
     def add_options(self) -> None:
         """Add .options statements."""
@@ -97,6 +104,7 @@ class BaseNetlistGenerator(ABC):
         self.lines = []
         self.add_header()
         self.add_includes()
+        self.add_models()
         self.add_options()
         self.add_netlist()
         self.add_control_block()

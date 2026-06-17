@@ -61,7 +61,7 @@
 // sg13g2_lv PSP103VA paramsets
 // Ported from `ngspice/models/sg13g2_moslv_param.lib`to Verilog-A
 // Modifications:
-// - added parameters to pass values from top-level wrapper paramsets
+// - "instance" parameters are fixed for maximum performance
 // - corner parameters are fixed to tt corner
 // (c) Lukas Deutz 2026
 
@@ -70,34 +70,21 @@
 
 // Generated from SPICE model card sg13g2_lv_nmos_psp in sg13g2_moslv_parm.lib
 paramset sg13g2_lv_nmos_psp_model PSP103VA
-    (* type = "instance" *) parameter real w = 0.35u;
-    (* type = "instance" *) parameter real l = 0.34u;
-    (* type = "instance" *) parameter integer nf = 1;
-    (* type = "instance" *) parameter real mult = 1.0;
-    (* type = "instance" *) parameter real as = 0.0;
-    (* type = "instance" *) parameter real ad = 0.0;
-    (* type = "instance" *) parameter real ps = 0.0;
-    (* type = "instance" *) parameter real pd = 0.0;
-    (* type = "instance" *) parameter real dta = 0.0;
-    (* type = "instance" *) parameter real ngcon = 2.0;
-    (* type = "instance" *) parameter real delvto = 0.0;
-    (* type = "instance" *) parameter real factuo = 1.0;
-    (* type = "instance" *) parameter real pre_layout = 1.0;
     .LEVEL = 103;
     .TYPE = 1;
-    .W = w;
-    .L = l;
-    .NF = nf;
-    .MULT = mult;
-    .AS = as;
-    .AD = ad;
-    .PS = ps;
-    .PD = pd;
+    .W = 0.5u;
+    .L = 0.2u;
+    .NF = 1;
+    .MULT = 1.0;
+    .AS = 1.7e-13;
+    .AD = 1.7e-13;
+    .PS = 1.68e-6;
+    .PD = 1.68e-6;
     .TR = 27.0;
-    .DTA = dta;
-    .NGCON = ngcon;
-    .DELVTO = delvto;
-    .FACTUO = factuo;
+    .DTA = 0.0;
+    .NGCON = 2.0;
+    .DELVTO = 0.0;
+    .FACTUO = 1.0;
     .SWGEO = 1.0;
     .SWIGATE = 1.0;
     .SWIMPACT = 1.0;
@@ -117,7 +104,7 @@ paramset sg13g2_lv_nmos_psp_model PSP103VA
     .WVARL = 0.0;
     .WVARW = 0.0;
     .WOT = -1e-08;
-    .DLQ = -1.3721e-08 - ((1 - pre_layout) * 2e-08);
+    .DLQ = -1.3721e-08;
     .DWQ = -1e-08;
     .VFBO = -0.94312 * 1.0;
     .VFBL = 0.013965;
@@ -168,7 +155,7 @@ paramset sg13g2_lv_nmos_psp_model PSP103VA
     .NPL = 0.0;
     .TOXOVO = 2.2404e-09 * 1.0000;
     .TOXOVDO = 2e-09;
-    .LOV = 2.9423e-08 -((1 - pre_layout) * 9e-09);
+    .LOV = 2.9423e-08;
     .LOVD = 0.0;
     .NOVO = 3.5714e+25;
     .NOVDO = 5e+25;
@@ -265,7 +252,7 @@ paramset sg13g2_lv_nmos_psp_model PSP103VA
     .A4L = 0.0;
     .A4W = 1.581e-16;
     .GCOO = 10.0;
-    .IGINVLW = 121290.0 * (1 + 2.4761e-07 / l) * (1 - 2.1167e-08 / w);
+    .IGINVLW = 121290.0 * (1 + 2.4761e-07 / 0.2e-6) * (1 - 2.1167e-08 / 0.5e-6);
     .IGOVW = 3026.8;
     .IGOVDW = 0.0;
     .STIGO = 2.9949;
@@ -457,8 +444,8 @@ paramset sg13g2_lv_nmos_psp_model PSP103VA
     .DLSIL = 0.0;
     .RSH = 0.0;
     .RSHD = 0.0;
-    .CFRW = 2e-16 / nf;
-    .SWSOA = 0;
+    .CFRW = 2e-16;
+    .SWSOA = 0.0;
     .VGS_MAX = 1.6;
     .VGD_MAX = 1.6;
     .VGB_MAX = 1.6;
@@ -469,34 +456,21 @@ endparamset
 
 //Generated from SPICE model card sg13g2_lv_pmos_psp in sg13g2_moslv_parm.lib
 paramset sg13g2_lv_pmos_psp_model PSP103VA
-    (* type = "instance" *) parameter real w = 0.28u;
-    (* type = "instance" *) parameter real l = 0.35u;
-    (* type = "instance" *) parameter integer nf = 1;
-    (* type = "instance" *) parameter real mult = 1.0;
-    (* type = "instance" *) parameter real as = 0.0;
-    (* type = "instance" *) parameter real ad = 0.0;
-    (* type = "instance" *) parameter real ps = 0.0;
-    (* type = "instance" *) parameter real pd = 0.0;
-    (* type = "instance" *) parameter real dta = 0.0;
-    (* type = "instance" *) parameter real ngcon = 2.0;
-    (* type = "instance" *) parameter real delvto = 0.0;
-    (* type = "instance" *) parameter real factuo = 1.0;
-    (* type = "instance" *) parameter real pre_layout = 1.0;
     .LEVEL = 103;
     .TYPE = -1;
-    .W = w;
-    .L = l;
-    .NF = nf;
-    .MULT = mult;
-    .AS = as;
-    .AD = ad;
-    .PS = ps;
-    .PD = pd;
+    .W = 1.0u;
+    .L = 0.2u;
+    .NF = 1;
+    .MULT = 1.0;
+    .AS = 3.4e-13;
+    .AD = 3.4e-13;
+    .PS = 2.68e-6;
+    .PD = 2.68e-6;
     .TR = 27.0;
-    .DTA = dta;
-    .NGCON = ngcon;
-    .DELVTO = delvto;
-    .FACTUO = factuo;
+    .DTA = 0.0;
+    .NGCON = 2.0;
+    .DELVTO = 0.0;
+    .FACTUO = 1.0;
     .SWGEO = 1.0;
     .SWIGATE = 1.0;
     .SWIMPACT = 1.0;
@@ -516,7 +490,7 @@ paramset sg13g2_lv_pmos_psp_model PSP103VA
     .WVARL = 0.0;
     .WVARW = 0.0;
     .WOT = 1.5e-08;
-    .DLQ = -9.5922e-08 -((1 - pre_layout) * 3e-08);
+    .DLQ = -9.5922e-08;
     .DWQ = 1.5e-08;
     .VFBO = -0.88703 * 1.0;
     .VFBL = 0.0089886;
@@ -567,7 +541,7 @@ paramset sg13g2_lv_pmos_psp_model PSP103VA
     .NPL = -0.095923;
     .TOXOVO = 1.9704e-09 * 1.0000;
     .TOXOVDO = 2e-09;
-    .LOV = 2.5254e-08 -((1 - pre_layout) * 8.85e-09);
+    .LOV = 2.5254e-08;
     .LOVD = 0.0;
     .NOVO = 3.104e+25;
     .NOVDO = 5e+25;
@@ -664,7 +638,7 @@ paramset sg13g2_lv_pmos_psp_model PSP103VA
     .A4L = 0.2771;
     .A4W = 0.7101;
     .GCOO = 0.01231;
-    .IGINVLW = 4880.4 * (1 - 5.803e-09 / l) * (1 + 5.1659e-08 / w);
+    .IGINVLW = 4880.4 * (1 - 5.803e-09 / 0.2e-6) * (1 + 5.1659e-08 / 1.0e-6);
     .IGOVW = 1327.0;
     .IGOVDW = 0.0;
     .STIGO = 2.3506;
@@ -856,8 +830,8 @@ paramset sg13g2_lv_pmos_psp_model PSP103VA
     .DLSIL = 0.0;
     .RSH = 0.0;
     .RSHD = 0.0;
-    .CFRW = 1e-16 / nf;
-    .SWSOA = 0;
+    .CFRW = 1e-16;
+    .SWSOA = 0.0;
     .VGS_MAX = 1.6;
     .VGD_MAX = 1.6;
     .VGB_MAX = 1.6;
