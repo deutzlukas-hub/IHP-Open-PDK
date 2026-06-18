@@ -1,7 +1,6 @@
 * CMOS inverter chain
 
-.model sg13_lv_nmos sg13g2_lv_nmos_psp_rf_model
-.model sg13_lv_pmos sg13g2_lv_pmos_psp_rf_model
+.lib "../models/cornerMOSlv.lib" mos_tt
 
 .options noacct
 .options nomod
@@ -14,8 +13,8 @@ VIN in 0 PULSE(0 1.2 10n 100p 100p 10n 20n)
 
 * Inverter subcircuit
 .subckt inv in out vdd gnd
-N1 out in vdd vdd sg13_lv_pmos
-N2 out in gnd gnd sg13_lv_nmos
+X1 out in vdd vdd sg13_lv_pmos w=1e-06 l=2e-07
+X2 out in gnd gnd sg13_lv_nmos w=5e-07 l=2e-07
 .ends
 
 * Inverter instances
@@ -68,7 +67,57 @@ X46 n45 n46 vdd 0 inv
 X47 n46 n47 vdd 0 inv
 X48 n47 n48 vdd 0 inv
 X49 n48 n49 vdd 0 inv
-X50 n49 out vdd 0 inv
+X50 n49 n50 vdd 0 inv
+X51 n50 n51 vdd 0 inv
+X52 n51 n52 vdd 0 inv
+X53 n52 n53 vdd 0 inv
+X54 n53 n54 vdd 0 inv
+X55 n54 n55 vdd 0 inv
+X56 n55 n56 vdd 0 inv
+X57 n56 n57 vdd 0 inv
+X58 n57 n58 vdd 0 inv
+X59 n58 n59 vdd 0 inv
+X60 n59 n60 vdd 0 inv
+X61 n60 n61 vdd 0 inv
+X62 n61 n62 vdd 0 inv
+X63 n62 n63 vdd 0 inv
+X64 n63 n64 vdd 0 inv
+X65 n64 n65 vdd 0 inv
+X66 n65 n66 vdd 0 inv
+X67 n66 n67 vdd 0 inv
+X68 n67 n68 vdd 0 inv
+X69 n68 n69 vdd 0 inv
+X70 n69 n70 vdd 0 inv
+X71 n70 n71 vdd 0 inv
+X72 n71 n72 vdd 0 inv
+X73 n72 n73 vdd 0 inv
+X74 n73 n74 vdd 0 inv
+X75 n74 n75 vdd 0 inv
+X76 n75 n76 vdd 0 inv
+X77 n76 n77 vdd 0 inv
+X78 n77 n78 vdd 0 inv
+X79 n78 n79 vdd 0 inv
+X80 n79 n80 vdd 0 inv
+X81 n80 n81 vdd 0 inv
+X82 n81 n82 vdd 0 inv
+X83 n82 n83 vdd 0 inv
+X84 n83 n84 vdd 0 inv
+X85 n84 n85 vdd 0 inv
+X86 n85 n86 vdd 0 inv
+X87 n86 n87 vdd 0 inv
+X88 n87 n88 vdd 0 inv
+X89 n88 n89 vdd 0 inv
+X90 n89 n90 vdd 0 inv
+X91 n90 n91 vdd 0 inv
+X92 n91 n92 vdd 0 inv
+X93 n92 n93 vdd 0 inv
+X94 n93 n94 vdd 0 inv
+X95 n94 n95 vdd 0 inv
+X96 n95 n96 vdd 0 inv
+X97 n96 n97 vdd 0 inv
+X98 n97 n98 vdd 0 inv
+X99 n98 n99 vdd 0 inv
+X100 n99 out vdd 0 inv
 
 * Load capacitance
 CL out 0 1e-14
@@ -76,7 +125,7 @@ CL out 0 1e-14
 .control
   set num_threads = 1
   * load osdi files
-  pre_osdi ../../osdi/sg13g2_moslv_rf_tailored.osdi
+  pre_osdi ../../osdi/psp103.osdi
 
   * save only so that storage does not scale with chain size
   save v(in) v(out)
@@ -89,7 +138,7 @@ CL out 0 1e-14
   * write output to file
   set wr_vecnames
   set wr_singlescale
-  wrdata check/tb_moslv_rf_inv_chain_N50_tt_tailored.sp.out v(in) v(out)
+  wrdata check/tb_moslv_inv_chain_N100_tt_generic.sp.out v(in) v(out)
   * clean exit after simulation
   set noaskquit
   quit

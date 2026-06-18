@@ -179,7 +179,9 @@ class InverterChainGenerator(BaseNetlistGenerator):
 
     def add_control_block(self) -> None:
 
+
         self.lines.append(".control")
+        self.lines.append("  set num_threads = 1")
 
         self.lines.append("  * load osdi files")
         for osdi_file in self.osdi_files:

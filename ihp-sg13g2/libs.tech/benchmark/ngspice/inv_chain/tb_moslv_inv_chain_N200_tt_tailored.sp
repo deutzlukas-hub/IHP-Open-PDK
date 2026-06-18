@@ -1,6 +1,7 @@
 * CMOS inverter chain
 
-.include "../models/sg13g2_moslv_rf_mod_osdi.lib"
+.model sg13_lv_nmos sg13g2_lv_nmos_psp_model
+.model sg13_lv_pmos sg13g2_lv_pmos_psp_model
 
 .options noacct
 .options nomod
@@ -13,8 +14,8 @@ VIN in 0 PULSE(0 1.2 10n 100p 100p 10n 20n)
 
 * Inverter subcircuit
 .subckt inv in out vdd gnd
-X1 out in vdd vdd sg13_lv_pmos w=1e-06 l=2e-07
-X2 out in gnd gnd sg13_lv_nmos w=5e-07 l=2e-07
+N1 out in vdd vdd sg13_lv_pmos
+N2 out in gnd gnd sg13_lv_nmos
 .ends
 
 * Inverter instances
@@ -225,7 +226,7 @@ CL out 0 1e-14
 .control
   set num_threads = 1
   * load osdi files
-  pre_osdi ../../osdi/sg13g2_moslv_rf.osdi
+  pre_osdi ../../osdi/sg13g2_moslv_tailored.osdi
 
   * save only so that storage does not scale with chain size
   save v(in) v(out)
@@ -238,7 +239,7 @@ CL out 0 1e-14
   * write output to file
   set wr_vecnames
   set wr_singlescale
-  wrdata check/tb_moslv_rf_inv_chain_N200_tt_paramset.sp.out v(in) v(out)
+  wrdata check/tb_moslv_inv_chain_N200_tt_tailored.sp.out v(in) v(out)
   * clean exit after simulation
   set noaskquit
   quit

@@ -73,6 +73,7 @@ X50 n49 out vdd 0 inv
 CL out 0 1e-14
 
 .control
+  set num_threads = 1
   * load osdi files
   pre_osdi ../../osdi/psp103_nqs.osdi
 
