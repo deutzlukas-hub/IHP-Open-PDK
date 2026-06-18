@@ -42,6 +42,10 @@ CL out 0 1e-14
   * print performance and resource usage
   rusage all
 
+  * write output to file
+  set wr_vecnames
+  set wr_singlescale
+  wrdata check/tb_moslv_rf_inv_chain_N10_tt_tailored.sp.out v(in) v(out) i(VDD)
   * clean exit after simulation
   set noaskquit
   quit

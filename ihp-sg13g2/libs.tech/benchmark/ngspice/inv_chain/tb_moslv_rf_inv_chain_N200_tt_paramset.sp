@@ -1,6 +1,6 @@
 * CMOS inverter chain
 
-.lib "../models/cornerMOSlv_rf.lib" mos_tt
+.include "../models/sg13g2_moslv_rf_mod_osdi.lib"
 
 .options noacct
 .options nomod
@@ -117,14 +117,114 @@ X96 n95 n96 vdd 0 inv
 X97 n96 n97 vdd 0 inv
 X98 n97 n98 vdd 0 inv
 X99 n98 n99 vdd 0 inv
-X100 n99 out vdd 0 inv
+X100 n99 n100 vdd 0 inv
+X101 n100 n101 vdd 0 inv
+X102 n101 n102 vdd 0 inv
+X103 n102 n103 vdd 0 inv
+X104 n103 n104 vdd 0 inv
+X105 n104 n105 vdd 0 inv
+X106 n105 n106 vdd 0 inv
+X107 n106 n107 vdd 0 inv
+X108 n107 n108 vdd 0 inv
+X109 n108 n109 vdd 0 inv
+X110 n109 n110 vdd 0 inv
+X111 n110 n111 vdd 0 inv
+X112 n111 n112 vdd 0 inv
+X113 n112 n113 vdd 0 inv
+X114 n113 n114 vdd 0 inv
+X115 n114 n115 vdd 0 inv
+X116 n115 n116 vdd 0 inv
+X117 n116 n117 vdd 0 inv
+X118 n117 n118 vdd 0 inv
+X119 n118 n119 vdd 0 inv
+X120 n119 n120 vdd 0 inv
+X121 n120 n121 vdd 0 inv
+X122 n121 n122 vdd 0 inv
+X123 n122 n123 vdd 0 inv
+X124 n123 n124 vdd 0 inv
+X125 n124 n125 vdd 0 inv
+X126 n125 n126 vdd 0 inv
+X127 n126 n127 vdd 0 inv
+X128 n127 n128 vdd 0 inv
+X129 n128 n129 vdd 0 inv
+X130 n129 n130 vdd 0 inv
+X131 n130 n131 vdd 0 inv
+X132 n131 n132 vdd 0 inv
+X133 n132 n133 vdd 0 inv
+X134 n133 n134 vdd 0 inv
+X135 n134 n135 vdd 0 inv
+X136 n135 n136 vdd 0 inv
+X137 n136 n137 vdd 0 inv
+X138 n137 n138 vdd 0 inv
+X139 n138 n139 vdd 0 inv
+X140 n139 n140 vdd 0 inv
+X141 n140 n141 vdd 0 inv
+X142 n141 n142 vdd 0 inv
+X143 n142 n143 vdd 0 inv
+X144 n143 n144 vdd 0 inv
+X145 n144 n145 vdd 0 inv
+X146 n145 n146 vdd 0 inv
+X147 n146 n147 vdd 0 inv
+X148 n147 n148 vdd 0 inv
+X149 n148 n149 vdd 0 inv
+X150 n149 n150 vdd 0 inv
+X151 n150 n151 vdd 0 inv
+X152 n151 n152 vdd 0 inv
+X153 n152 n153 vdd 0 inv
+X154 n153 n154 vdd 0 inv
+X155 n154 n155 vdd 0 inv
+X156 n155 n156 vdd 0 inv
+X157 n156 n157 vdd 0 inv
+X158 n157 n158 vdd 0 inv
+X159 n158 n159 vdd 0 inv
+X160 n159 n160 vdd 0 inv
+X161 n160 n161 vdd 0 inv
+X162 n161 n162 vdd 0 inv
+X163 n162 n163 vdd 0 inv
+X164 n163 n164 vdd 0 inv
+X165 n164 n165 vdd 0 inv
+X166 n165 n166 vdd 0 inv
+X167 n166 n167 vdd 0 inv
+X168 n167 n168 vdd 0 inv
+X169 n168 n169 vdd 0 inv
+X170 n169 n170 vdd 0 inv
+X171 n170 n171 vdd 0 inv
+X172 n171 n172 vdd 0 inv
+X173 n172 n173 vdd 0 inv
+X174 n173 n174 vdd 0 inv
+X175 n174 n175 vdd 0 inv
+X176 n175 n176 vdd 0 inv
+X177 n176 n177 vdd 0 inv
+X178 n177 n178 vdd 0 inv
+X179 n178 n179 vdd 0 inv
+X180 n179 n180 vdd 0 inv
+X181 n180 n181 vdd 0 inv
+X182 n181 n182 vdd 0 inv
+X183 n182 n183 vdd 0 inv
+X184 n183 n184 vdd 0 inv
+X185 n184 n185 vdd 0 inv
+X186 n185 n186 vdd 0 inv
+X187 n186 n187 vdd 0 inv
+X188 n187 n188 vdd 0 inv
+X189 n188 n189 vdd 0 inv
+X190 n189 n190 vdd 0 inv
+X191 n190 n191 vdd 0 inv
+X192 n191 n192 vdd 0 inv
+X193 n192 n193 vdd 0 inv
+X194 n193 n194 vdd 0 inv
+X195 n194 n195 vdd 0 inv
+X196 n195 n196 vdd 0 inv
+X197 n196 n197 vdd 0 inv
+X198 n197 n198 vdd 0 inv
+X199 n198 n199 vdd 0 inv
+X200 n199 out vdd 0 inv
 
 * Load capacitance
 CL out 0 1e-14
 
 .control
   * load osdi files
-  pre_osdi ../../osdi/psp103_nqs.osdi
+  pre_osdi ../../osdi/sg13g2_moslv_rf.osdi
 
   tran 0.1n 110n 0 0.1n
 
@@ -134,7 +234,7 @@ CL out 0 1e-14
   * write output to file
   set wr_vecnames
   set wr_singlescale
-  wrdata check/tb_moslv_rf_inv_chain_N100_tt_generic.sp.out v(in) v(out) i(VDD)
+  wrdata check/tb_moslv_rf_inv_chain_N200_tt_paramset.sp.out v(in) v(out) i(VDD)
   * clean exit after simulation
   set noaskquit
   quit

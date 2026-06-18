@@ -1,6 +1,6 @@
 * CMOS inverter chain
 
-.include "../models/sg13g2_moslv_rf_mod_osdi.lib"
+.lib "../models/cornerMOSlv_rf.lib" mos_tt
 
 .options noacct
 .options nomod
@@ -27,14 +27,24 @@ X6 n5 n6 vdd 0 inv
 X7 n6 n7 vdd 0 inv
 X8 n7 n8 vdd 0 inv
 X9 n8 n9 vdd 0 inv
-X10 n9 out vdd 0 inv
+X10 n9 n10 vdd 0 inv
+X11 n10 n11 vdd 0 inv
+X12 n11 n12 vdd 0 inv
+X13 n12 n13 vdd 0 inv
+X14 n13 n14 vdd 0 inv
+X15 n14 n15 vdd 0 inv
+X16 n15 n16 vdd 0 inv
+X17 n16 n17 vdd 0 inv
+X18 n17 n18 vdd 0 inv
+X19 n18 n19 vdd 0 inv
+X20 n19 out vdd 0 inv
 
 * Load capacitance
 CL out 0 1e-14
 
 .control
   * load osdi files
-  pre_osdi ../../osdi/sg13g2_moslv_rf.osdi
+  pre_osdi ../../osdi/psp103_nqs.osdi
 
   tran 0.1n 110n 0 0.1n
 
@@ -44,7 +54,7 @@ CL out 0 1e-14
   * write output to file
   set wr_vecnames
   set wr_singlescale
-  wrdata check/tb_moslv_rf_inv_chain_N10_tt_paramset.sp.out v(in) v(out) i(VDD)
+  wrdata check/tb_moslv_rf_inv_chain_N20_tt_generic.sp.out v(in) v(out) i(VDD)
   * clean exit after simulation
   set noaskquit
   quit
