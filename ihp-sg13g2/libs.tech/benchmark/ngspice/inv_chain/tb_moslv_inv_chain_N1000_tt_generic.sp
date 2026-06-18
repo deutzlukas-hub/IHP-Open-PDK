@@ -13,8 +13,8 @@ VIN in 0 PULSE(0 1.2 10n 100p 100p 10n 20n)
 
 * Inverter subcircuit
 .subckt inv in out vdd gnd
-X1 out in vdd vdd sg13_lv_pmos w=1e-06 l=2e-07 rfmode=0
-X2 out in gnd gnd sg13_lv_nmos w=5e-07 l=2e-07 rfmode=0
+X1 out in vdd vdd sg13_lv_pmos w=1e-06 l=2e-07
+X2 out in gnd gnd sg13_lv_nmos w=5e-07 l=2e-07
 .ends
 
 * Inverter instances
@@ -1026,7 +1026,10 @@ CL out 0 1e-14
   * load osdi files
   pre_osdi ../../osdi/psp103.osdi
 
-  tran 0.1n 210n 0 0.1n
+  * save only so that storage does not scale with chain size
+  save v(in) v(out)
+
+  tran 0.1n 110n 0 0.1n
 
   * print performance and resource usage
   rusage all
@@ -1034,7 +1037,7 @@ CL out 0 1e-14
   * write output to file
   set wr_vecnames
   set wr_singlescale
-  wrdata check/tb_moslv_inv_chain_N1000_tt_generic.sp.out v(in) v(out) i(VDD)
+  wrdata check/tb_moslv_inv_chain_N1000_tt_generic.sp.out v(in) v(out)
   * clean exit after simulation
   set noaskquit
   quit

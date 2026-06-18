@@ -1026,6 +1026,9 @@ CL out 0 1e-14
   * load osdi files
   pre_osdi ../../osdi/psp103_nqs.osdi
 
+  * save only so that storage does not scale with chain size
+  save v(in) v(out)
+
   tran 0.1n 110n 0 0.1n
 
   * print performance and resource usage
@@ -1034,7 +1037,7 @@ CL out 0 1e-14
   * write output to file
   set wr_vecnames
   set wr_singlescale
-  wrdata check/tb_moslv_rf_inv_chain_N1000_tt_generic.sp.out v(in) v(out) i(VDD)
+  wrdata check/tb_moslv_rf_inv_chain_N1000_tt_generic.sp.out v(in) v(out)
   * clean exit after simulation
   set noaskquit
   quit

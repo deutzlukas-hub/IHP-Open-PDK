@@ -11,21 +11,21 @@ Note: Starting dynamic gmin stepping
 Note: Dynamic gmin stepping completed
 
 No. of Data Rows : 3068
-Total elapsed time (seconds) = 78.688 
-Total DRAM available = 15615.586 MB.
-DRAM currently available = 4669.066 MB.
-Maximum ngspice program size =  839.562 MB.
-Current ngspice program size =  313.824 MB.
+Total elapsed time (seconds) = 83.228 
+Total DRAM available = 128510.789 MB.
+DRAM currently available = 6046.824 MB.
+Maximum ngspice program size =  841.625 MB.
+Current ngspice program size =  314.609 MB.
 
-Shared ngspice pages =   10.211 MB.
-Text (code) pages =    5.859 MB.
+Shared ngspice pages =   11.684 MB.
+Text (code) pages =    5.875 MB.
 Stack = 0 bytes.
-Library pages =  372.363 MB.
+Library pages =  372.285 MB.
 
 Number of lines in the deck = 227052
-Netlist loading time = 0.00711457
-Subckt and Param expansion time = 2.40646
-Netlist parsing time = 1.84234
+Netlist loading time = 0.00474114
+Subckt and Param expansion time = 1.65684
+Netlist parsing time = 1.24965
 
 Nominal temperature = 27
 Operating temperature = 27
@@ -38,22 +38,23 @@ Circuit total non-zeroes = 32002
 Transient timepoints = 4320
 Accepted timepoints = 3068
 Rejected timepoints = 1252
-Total analysis time (seconds) = 76.2723
-Matrix load time = 58.7715
+Total analysis time (seconds) = 81.5647
+Matrix load time = 73.7652
 Matrix synchronize time = 0
-Matrix reorder time = 0.00633648
-Matrix factor time = 7.18076
-Matrix solve time = 2.54425
-Transient analysis time = 73.6539
-Transient load time = 56.6426
+Matrix reorder time = 0.00383444
+Matrix factor time = 2.9112
+Matrix solve time = 1.52896
+Transient analysis time = 78.2665
+Transient load time = 70.7167
 Transient sync time = 0
-Transient factor time = 6.88335
-Transient solve time = 2.44334
-Transient trunc time = 4.12717
+Transient factor time = 2.78553
+Transient solve time = 1.46536
+Transient trunc time = 1.70361
 Transient iterations for the last time point = 0
 AC analysis time = 0
 AC load time = 0
 AC sync time = 0
 AC factor time = 0
 AC solve time = 0
+check/tb_moslv_inv_chain_N1000_tt_generic.sp.out: No such file or directory
 ngspice-46 done

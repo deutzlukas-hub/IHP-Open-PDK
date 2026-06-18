@@ -10,7 +10,7 @@
 .options reltol=1e-4
 
 VDD vdd 0 1.2
-VIN in 0 PWL(0 0 10n 0 11n 1.2 100.0n 1.2)
+VIN in 0 PULSE(0 1.2 10n 100p 100p 10n 20n)
 
 * Inverter subcircuit
 .subckt inv in out vdd gnd
@@ -525,9 +525,12 @@ CL out 0 1e-14
 
 .control
   * load osdi files
-  pre_osdi ../../osdi/sg13g2_moslv_inv_chain.osdi
+  pre_osdi ../../osdi/sg13g2_moslv_tailored.osdi
 
-  tran 1e-10 1e-07 0 1e-10
+  * save only so that storage does not scale with chain size
+  save v(in) v(out)
+
+  tran 0.1n 110n 0 0.1n
 
   * print performance and resource usage
   rusage all
@@ -535,7 +538,7 @@ CL out 0 1e-14
   * write output to file
   set wr_vecnames
   set wr_singlescale
-  wrdata check/tb_moslv_inv_chain_N500_tt_tailored.sp.out v(in) v(out) i(VDD)
+  wrdata check/tb_moslv_inv_chain_N500_tt_tailored.sp.out v(in) v(out)
   * clean exit after simulation
   set noaskquit
   quit

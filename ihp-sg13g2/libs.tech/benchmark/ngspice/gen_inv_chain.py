@@ -186,6 +186,12 @@ class InverterChainGenerator(BaseNetlistGenerator):
             self.lines.append(f"  pre_osdi {osdi_file}")
 
         self.lines.append("")
+
+        # Save only fixed nodes for fair benchmark as num_inv increases
+        self.lines.append( "  * save only so that storage does not scale with chain size")
+        self.lines.append(f"  save v(in) v(out)")
+        self.lines.append("")
+
         # Transient analysis
         tran_cmd = f"tran {self.tran_step} {self.tran_stop} 0 {self.tran_max}"
         self.lines.append(f"  {tran_cmd}")
@@ -198,7 +204,7 @@ class InverterChainGenerator(BaseNetlistGenerator):
             self.lines.append("  * write output to file")
             self.lines.append("  set wr_vecnames")
             self.lines.append("  set wr_singlescale")
-            self.lines.append(f"  wrdata check/{self.net_name}.sp.out v(in) v(out) i(VDD)")
+            self.lines.append(f"  wrdata check/{self.net_name}.sp.out v(in) v(out)")
 
         self.lines.append("  * clean exit after simulation")
         self.lines.append("  set noaskquit")
@@ -223,8 +229,8 @@ if __name__ == "__main__":
     from base_generator import ModelType
 
     # num_inv_list = [500, 1000, 2000, 4000]
-    num_inv_list = [10, 50, 100] # , 2000, 4000]
-    gen = InverterChainGenerator(wrdata=False, input="pulse")
+    num_inv_list = [10, 20, 50, 100, 200, 500, 1000] # , 2000, 4000]
+    gen = InverterChainGenerator(wrdata=True, input="pulse")
     #gen.clean_build()
 
     for rf_mode in [0, 1]:
