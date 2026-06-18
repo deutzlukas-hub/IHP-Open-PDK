@@ -4,28 +4,18 @@ Generate inverter chain testbench for ngspice
 """
 from base_generator import BaseNetlistGenerator
 
-class InverterChainGenerator(BaseNetlistGenerator):
+class InverterRingGenerator(BaseNetlistGenerator):
 
     def __init__(self,
         wrdata: bool = False,
         # device parameters
-        w_nmos: float = 0.5e-6,
-        w_pmos: float = 1.0e-6,
-        l_nmos: float = 0.2e-6,
-        l_pmos: float = 0.2e-6,
-        cload: float = 1e-14,
-        # input parameters
+        w_nmos: str = "0.5u",
+        w_pmos: str = "1.0u",
+        l_nmos: str = "0.2u",
+        l_pmos: str = "0.2u",
+        Cdecap: str = "1p",
+        # voltage
         vdd: float = 1.2,
-        input: str = "step",
-        pulse_delay: float = "10n",
-        pulse_rise: float = "100p",
-        pulse_fall: float = "100p",
-        pulse_width: float = "10n",
-        pulse_period: float = "20n",
-        # transient
-        tran_stop: float = "110n",
-        tran_step: float = "0.1n",
-        tran_max: float = "0.1n",
     ):
         self.wrdata = wrdata
 
@@ -33,30 +23,16 @@ class InverterChainGenerator(BaseNetlistGenerator):
         self.w_pmos = w_pmos
         self.l_nmos = l_nmos
         self.l_pmos = l_pmos
-        self.cload = cload
 
-        self.input = input
+        self.Cdecap = Cdecap
+
         self.vdd = vdd
-        self.pulse_delay = pulse_delay
-        self.pulse_rise = pulse_rise
-        self.pulse_fall = pulse_fall
-        self.pulse_width = pulse_width
-        self.pulse_period = pulse_period
 
-        # single-step PWL parameters
-        self.pwl_delay: float = 10e-9
-        self.pwl_edge_time: float = 100e-12
-
-        # trans parameters
-        self.tran_stop = tran_stop
-        self.tran_step = tran_step
-        self.tran_max = tran_max
-
-        super().__init__(build_dir="inv_chain")
+        super().__init__(build_dir="inv_ring")
 
     @property
     def title(self) -> str:
-        return "* CMOS inverter chain"
+        return f"* CMOS ring oscillator with {self.num_inv} stages"
 
     @property
     def osdi_files(self) -> list[str]:
@@ -120,65 +96,47 @@ class InverterChainGenerator(BaseNetlistGenerator):
             "klu": None,
             "reltol": "1e-4"}
 
-
-    def input_source_line(self) -> str:
-
-        if self.input == "step":
-            return (
-                f"VIN in 0 PWL("
-                f"0 0 "
-                f"10n 0 "
-                f"11n {self.vdd} "
-                f"{self.tran_stop * 1e9}n {self.vdd})"
-            )
-
-        if self.input == "pulse":
-            # PULSE(VLOW VHIGH DELAY RISE FALL WIDTH PERIOD)
-            return (
-                f"VIN in 0 PULSE(0 {self.vdd} "
-                f"{self.pulse_delay} "
-                f"{self.pulse_rise} "
-                f"{self.pulse_fall} "
-                f"{self.pulse_width} "
-                f"{self.pulse_period})"
-            )
-
     def add_netlist(self) -> None:
 
-        self.lines.append(f"VDD vdd 0 {self.vdd}")
-        self.lines.append(self.input_source_line())
         self.lines.append("")
-        self.lines.append("* Inverter subcircuit")
-        self.lines.append(".subckt inv in out vdd gnd")
 
+        self.lines.append("* Inverter subcircuit")
+        self.lines.append(".subckt inverter in out vdd gnd")
         if self.model_type in [ModelType.GENERIC, ModelType.PARAMSET]:
-            self.lines.append(f"X1 out in vdd vdd sg13_lv_pmos w={self.w_pmos} l={self.l_pmos}")
-            self.lines.append(f"X2 out in gnd gnd sg13_lv_nmos w={self.w_nmos} l={self.l_nmos}")
+            self.lines.append(f"Xpm out in vdd vdd sg13_lv_pmos w={self.w_pmos} l={self.l_pmos}")
+            self.lines.append(f"Xmn out in gnd gnd sg13_lv_nmos w={self.w_nmos} l={self.l_nmos}")
         elif self.model_type == ModelType.TAILORED_PARAMSET:
-            self.lines.append(f"N1 out in vdd vdd sg13_lv_pmos")
-            self.lines.append(f"N2 out in gnd gnd sg13_lv_nmos")
+            self.lines.append(f"Npm out in vdd vdd sg13_lv_pmos")
+            self.lines.append(f"Nmn out in gnd gnd sg13_lv_nmos")
         self.lines.append(".ends")
         self.lines.append("")
-        self.lines.append("* Inverter instances")
 
-        for i in range(1, self.num_inv + 1):
-            if i == 1:
-                in_node = "in"
-            else:
-                in_node = f"n{i-1}"
-
-            if i == self.num_inv:
-                out_node = "out"
-            else:
-                out_node = f"n{i}"
-            self.lines.append(f"X{i} {in_node} {out_node} vdd 0 inv")
+        self.lines.append("i0 0 1 dc 0 pulse 0 1e-05 0.1n 0.1n 0.1n 0.3n")
         self.lines.append("")
-        self.lines.append("* Load capacitance")
-        self.lines.append(f"CL out 0 {self.cload}")
+
+        self.lines.append("* Inverter ring")
+        for i in range(1, self.num_inv + 1):
+            in_node = i
+            out_node = i + 1 if i < self.num_inv else 1  # Last inverter feeds back to node 1
+            self.lines.append(f"xu{i} {in_node} {out_node} vdd 0 inverter")
+
+        self.lines.append("")
+        self.lines.append("* Supply voltage")
+        self.lines.append(f"vdd vdd 0 {self.vdd}")
+        self.lines.append( "* Load capacitance")
+        self.lines.append( f"Cdecap vdd 0 {self.Cdecap}")
+        self.lines.append("")
+
+        # Initial conditions
+        nodes = list(range(1, self.num_inv + 1))
+        per_line = 5
+        for i in range(0, len(nodes), per_line):
+            chunk = nodes[i:i + per_line]
+            terms = " ".join(f"v({node})=0.0" for node in chunk)
+            self.lines.append(f".ic {terms}")
         self.lines.append("")
 
     def add_control_block(self) -> None:
-
 
         self.lines.append(".control")
         self.lines.append("  set num_threads = 1")
@@ -192,11 +150,11 @@ class InverterChainGenerator(BaseNetlistGenerator):
 
         # Save only fixed nodes for fair benchmark as num_inv increases
         self.lines.append( "  * save only so that storage does not scale with chain size")
-        self.lines.append(f"  save v(in) v(out)")
+        self.lines.append(f"  save v(1)")
         self.lines.append("")
 
         # Transient analysis
-        tran_cmd = f"tran {self.tran_step} {self.tran_stop} 0 {self.tran_max}"
+        tran_cmd = f"tran {self.tran_step} {self.tran_stop} 0 {self.tran_max} uic"
         self.lines.append(f"  {tran_cmd}")
         self.lines.append("")
         self.lines.append("  * print performance and resource usage")
@@ -207,7 +165,7 @@ class InverterChainGenerator(BaseNetlistGenerator):
             self.lines.append("  * write output to file")
             self.lines.append("  set wr_vecnames")
             self.lines.append("  set wr_singlescale")
-            self.lines.append(f"  wrdata check/{self.net_name}.sp.out v(in) v(out)")
+            self.lines.append(f"  wrdata check/{self.net_name}.sp.out v(1)")
 
         self.lines.append("  * clean exit after simulation")
         self.lines.append("  set noaskquit")
@@ -215,15 +173,24 @@ class InverterChainGenerator(BaseNetlistGenerator):
 
         self.lines.append(".endc")
 
-    def generate_netlist(self, num_inv: int, rf_mode: int) -> str:
+    def generate_netlist(self,
+        num_inv: int,
+        rf_mode: int,
+        tran_stop: float,
+        tran_step: float,
+        tran_max: float
+    ) -> str:
 
         self.num_inv = num_inv
         self.rf_mode = rf_mode
+        self.tran_stop = tran_stop
+        self.tran_step = tran_step
+        self.tran_max = tran_max
 
         if self.rf_mode == 0:
-            name = f"tb_moslv_inv_chain_N{num_inv}_tt"
+            name = f"tb_moslv_inv_ring_N{num_inv}_tt"
         else:
-            name = f"tb_moslv_rf_inv_chain_N{num_inv}_tt"
+            name = f"tb_moslv_rf_inv_ring_N{num_inv}_tt"
 
         return super().generate_netlist(name)
 
@@ -231,15 +198,26 @@ if __name__ == "__main__":
 
     from base_generator import ModelType
 
-    # num_inv_list = [500, 1000, 2000, 4000]
-    num_inv_list = [10, 20, 50, 100, 200, 500, 1000] # , 2000, 4000]
-    gen = InverterChainGenerator(wrdata=True, input="pulse")
-    #gen.clean_build()
+    # Average propagation delay of one inverter
+    tpd = 0.15679572639369496 * 1e-9  # seconds
+    num_cycles = 10
+    points_per_cycle = 100
+
+    num_inv_list = [11, 21, 51, 101]
+    gen = InverterRingGenerator(wrdata=True)
 
     for rf_mode in [0, 1]:
         for model_type in [ModelType.GENERIC, ModelType.PARAMSET, ModelType.TAILORED_PARAMSET]:
             gen.set_model_type(model_type)
             for num_inv in num_inv_list:
-                gen.generate_netlist(num_inv, rf_mode)
+                # Calculate period and simulation parameters
+                T = 2 * num_inv * tpd
+                # Update timing parameters for this configuration
+                tran_stop = num_cycles * T
+                tran_step = T / points_per_cycle
+                tran_max = tran_step
+
+                gen.generate_netlist(num_inv, rf_mode, tran_stop, tran_step, tran_max)
+
 
 
