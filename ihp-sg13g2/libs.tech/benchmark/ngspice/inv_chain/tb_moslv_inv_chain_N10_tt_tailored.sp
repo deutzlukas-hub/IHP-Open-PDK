@@ -34,7 +34,8 @@ X10 n9 out vdd 0 inv
 CL out 0 1e-14
 
 .control
-  set num_threads = 1
+  set num_threads = 2
+
   * load osdi files
   pre_osdi ../../osdi/sg13g2_moslv_tailored.osdi
 

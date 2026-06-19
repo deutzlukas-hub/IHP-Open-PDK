@@ -59,6 +59,9 @@ xvb14 b14 0 v01
 xvb15 b15 0 v01
 
 .control
+
+  set num_threads = 3
+
   * load osdi files
   pre_osdi ../../osdi/psp103_nqs.osdi
 

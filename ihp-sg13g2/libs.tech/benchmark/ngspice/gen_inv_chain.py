@@ -8,6 +8,7 @@ class InverterChainGenerator(BaseNetlistGenerator):
 
     def __init__(self,
         wrdata: bool = False,
+        num_threads: int = 2,
         # device parameters
         w_nmos: float = 0.5e-6,
         w_pmos: float = 1.0e-6,
@@ -28,6 +29,7 @@ class InverterChainGenerator(BaseNetlistGenerator):
         tran_max: float = "0.1n",
     ):
         self.wrdata = wrdata
+        self.num_threads = num_threads
 
         self.w_nmos = w_nmos
         self.w_pmos = w_pmos
@@ -181,7 +183,7 @@ class InverterChainGenerator(BaseNetlistGenerator):
 
 
         self.lines.append(".control")
-        self.lines.append("  set num_threads = 1")
+        self.lines.append(f"  set num_threads = {self.num_threads}")
         self.lines.append("")
 
         self.lines.append("  * load osdi files")
