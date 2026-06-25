@@ -338,7 +338,7 @@ class Module():
             raise RuntimeError("constant propagation did not reach fixed point")
 
         # Final cosmetic clean-up
-        self._remove_stale_declarations()
+        self._remove_stale_declarations(max_iters)
 
     #===========================================================================
     # Block discovery and local variable renaming
@@ -1052,13 +1052,23 @@ class Module():
     # Dead declaration cleanup
     #===========================================================================
 
-    def _remove_stale_declarations(self):
+    def _remove_stale_declarations(self, max_iters: int = 20) -> None:
         """Remove references to parameters and variables that are no longer used"""
-        self._parse_declarations()
-        identifier_counts = self._identifier_counts()
-        self._remove_unreferenced_vars()
-        # assumes that localparam declarations appear before all variabl declarations
-        self._remove_unreferenced_localparams()
+
+        for i in range(max_iters):
+            print("clean up: ", i, " ", end="")
+
+            old_content = self.content.copy()
+
+            self._parse_declarations()
+            self._remove_unreferenced_vars()
+            # assumes that localparam declarations appear above all variabl declarations
+            self._remove_unreferenced_localparams()
+
+            if self.content == old_content:
+                print("fix point")
+                return
+        raise RuntimeError("Unreferenced variables removal does not reach fixpoint")
 
     def _remove_unreferenced_localparams(self) -> int:
         """Remove dead localparam declarations."""
@@ -1079,41 +1089,40 @@ class Module():
 
         return len(unreferenced_params)
 
-    def _remove_unreferenced_vars(self) -> int:
+    def _remove_unreferenced_vars(self) -> None:
         """Remove dead variable declarations."""
 
-        identifier_counts = self._identifier_counts()
+        vars_usage = self._analyze_identifier_usage()
 
-        unref_vars: list[tuple[str, int]] = [
-            (var_name, line_num)
-            for var_name, (_, line_num) in self.vars.items()
-            if identifier_counts[var_name] == 1
-        ]
+        lines_to_remove = set()
 
-        unref_vars_by_line: dict[int, set[str]] = defaultdict(set)
+        vars_decl_to_remove_by_line: dict[int, list[str]] = defaultdict(list)
 
-        for var_name, line_num in unref_vars:
-            unref_vars_by_line[line_num].add(var_name)
+        for name, usage in vars_usage.items():
 
-        for line_num in sorted(unref_vars_by_line.keys(), reverse=True):
-            vars_to_remove = unref_vars_by_line[line_num]
+            if not usage["uses"]:
+                vars_decl_to_remove_by_line[usage["declaration_line"]].append(name)
+                for line_num in usage["assignments"]:
+                    lines_to_remove.add(line_num)
 
-            new_line = self._remove_declared_vars(
-                self.content[line_num],
-                vars_to_remove,
-            )
+        for line_num, vars_to_remove in vars_decl_to_remove_by_line.items():
 
-            if new_line is not None:
-                self.content[line_num] = new_line
+            new_line = self._remove_declared_vars(self.content[line_num], vars_to_remove)
+
+            # if newline is None, all variable declarations on this line were removed
+            if new_line is None:
+                lines_to_remove.add(line_num)
+            # Override old line with newline with unused variables removed
             else:
-                del self.content[line_num]
+                self.content[line_num] = new_line
 
-        for var_name, _ in unref_vars:
-            del self.vars[var_name]
+        for line_num in sorted(lines_to_remove, reverse=True):
+            del self.content[line_num]
 
-        return len(unref_vars)
-
-    def _remove_declared_vars(self, line: str, vars_to_remove: set[str]):
+    def _remove_declared_vars(self,
+        line: str,
+        vars_to_remove: set[str]
+    ) -> str | None:
 
         match = self.DECLARATION_RE.match(line)
         assert match is not None, f"Invalid variable declaration line: {line}"
@@ -1130,6 +1139,50 @@ class Module():
             return None
 
         return f"{indent}{vars_type} {', '.join(remaining_vars)};\n"
+
+    def _analyze_identifier_usage(self) -> dict[str, dict]:
+
+        var_usage = {}
+
+        for var_name, (var_type, dec_line) in self.vars.items():
+            var_usage[var_name] = {
+                'declaration_line': dec_line,
+                'assignments': [],
+                'uses': []
+            }
+
+        for line_num, line in enumerate(self.content):
+            stripped = line.strip()
+            code, _, _ = line.partition("//")
+            code = code.rstrip("\n")
+
+            # Check if assignment
+            if match := self.ASSIGNMENT_RE.match(code):
+                lhs = match.group('lhs')
+                rhs = match.group('rhs')
+
+                # Track LHS assignments
+                if lhs in var_usage:
+                    var_usage[lhs]['assignments'].append(line_num)
+
+                for ident in set(self.IDENTIFIER_RE.findall(rhs)):
+                    # if identifier is not a known variable skip
+                    if ident not in var_usage:
+                        continue
+                    # don't count self-referential assignments as usage
+                    if ident != lhs:
+                        var_usage[ident]["uses"].append(line_num)
+
+            else:
+                # Skip declaration lines
+                if stripped.startswith(('integer', 'real')):
+                    continue
+
+                for ident in set(self.IDENTIFIER_RE.findall(code)):
+                    if ident in var_usage:
+                        var_usage[ident]["uses"].append(line_num)
+
+        return var_usage
 
 
     def _identifier_counts(self) -> Counter[str]:
