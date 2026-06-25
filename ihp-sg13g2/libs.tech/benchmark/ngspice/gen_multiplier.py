@@ -122,10 +122,13 @@ class C6288Generator(BaseNetlistGenerator):
 
         self.lines.append(".control")
 
+        self.lines.append("")
+        self.lines.append("  set num_threads = 1")
+        self.lines.append("")
+
         self.lines.append("  * load osdi files")
         for osdi_file in self.osdi_files:
             self.lines.append(f"  pre_osdi {osdi_file}")
-
 
         self.lines.append("")
         self.lines.append("  *save only")

@@ -53,7 +53,7 @@ def estimate_ring_tpd(t_arr, v_arr, num_inv, vdd=1.2, skip_cycles=2):
 def plot_tb_moslv_inv_ring(show: bool=False):
 
     # num inverters
-    num_inv_list = [11] #, 21, 51, 101]
+    num_inv_list = [11, 21, 51, 101]
 
     fig = plt.figure(figsize=(10, 10))
     gs = plt.GridSpec(len(num_inv_list) + 2, 1, bottom = 0.1, hspace=0.4)

@@ -19,8 +19,8 @@ def main():
     benchmark_dir = Path(__file__).parent
 
     # Run generic model
-    # generic_target = f"bench-tb_moslv_rf_c6288_tt_generic"
-    # run_benchmark(generic_target, args.j, args.REPEATS, benchmark_dir)
+    generic_target = f"bench-tb_moslv_rf_c6288_tt_generic"
+    run_benchmark(generic_target, args.j, args.REPEATS, benchmark_dir)
 
     # Run tailored model
     tailored_target = f"bench-tb_moslv_rf_c6288_tt_tailored"

@@ -91,7 +91,7 @@ def plot_tb_moslv_inv_chain_pulse(show=True, rfmode=0):
             # ax0.plot(tin, 0.6, marker = "o", color = "grey", zorder=5, alpha=1.0, ms=4)
             # ax0.text(0.6 * tin, 0.59, "input", color="0.45", fontsize=9, ha="center")
 
-    ax0.axhline(0.6, ls=":", lw=1.0, color="0.6", alpha=0.6)
+    ax0.axhline(0.6, ls=/home/amoghasiddhi/git/IHP-Open-PDK/ihp-sg13g2/libs.tech/benchmark/verilog-a-optimized/tests/ref":", lw=1.0, color="0.6", alpha=0.6)
     ax0.set_xlabel("time [µs]")
     ax0.set_ylabel("voltage [V]")
 
@@ -224,8 +224,8 @@ def plot_tb_moslv_inv_chain(show=False):
     return
 
 def main():
-    # plot_tb_moslv_inv_chain()
-    plot_tb_moslv_inv_chain_pulse(rfmode=1)
+    plot_tb_moslv_inv_chain()
+    # plot_tb_moslv_inv_chain_pulse(rfmode=1)
 
 if __name__ == "__main__":
     main()
