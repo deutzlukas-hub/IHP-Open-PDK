@@ -1264,8 +1264,7 @@ class ExpressionEvaluator:
         expr: str
     ) -> bool:
 
-        if "&&" in expr or "||" in expr:
-            return True
+        # add stuff here if neccesary
 
         return False
 
@@ -1292,6 +1291,18 @@ class ExpressionEvaluator:
 
         return expr
 
+    @staticmethod
+    def _normalize_logical_operators(
+        expr: str
+    ) -> str:
+        """Convert Verilog-A logical operators to Python equivalents."""
+        expr = expr.replace("&&", " and ").replace("||", " or ")
+        # Replace ! with not, but NOT when followed by =
+        # Negative lookahead (?!=) ensures we don't match !=
+        expr = re.sub(r'!(?!=)', ' not ', expr)
+
+        return expr
+
     @classmethod
     def _try_eval_raw_expr(cls,
         expr: str,
@@ -1306,10 +1317,8 @@ class ExpressionEvaluator:
             return None
 
         expr = cls._normalize_system_functions(expr)
-
         expr = cls._normalize_ternary_operators(expr)
-        if expr is None:
-            return None
+        expr = cls._normalize_logical_operators(expr)
 
         try:
             value = eval(expr, {"__builtins__": {}}, cls.FUNCS)
