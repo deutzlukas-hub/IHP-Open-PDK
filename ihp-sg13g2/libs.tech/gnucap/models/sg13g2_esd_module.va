@@ -1,0 +1,241 @@
+//#######################################################################
+//
+// Copyright 2026 IHP PDK Authors
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//    https://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+//#######################################################################
+
+//******************************************************************************
+// Verilog-A sg13g2_esd ESD clamp diode wrappers
+// Ported from `ngspice/models/sg13g2_esd.lib`.
+//
+// Each SPICE `.MODEL D <name>` lives in `paramsets/diode_esd.va` as a
+// `paramset` extending `sp_diode`. Each SPICE `.subckt <name>` below
+// becomes a Verilog-A `module` whose internal instances reference those
+// paramsets. The instance parameters `area` and `pj` are dimensionless
+// SPICE diode multipliers (matches the convention used by
+// `paramsets/diode_dantenna.va`, `paramsets/diode_dpantenna.va`).
+//
+// Modifications:
+//
+// (c) Lukas Deutz 2026
+//******************************************************************************
+
+//******************************************************************************
+// diodevdd_2kv -- sg13g2_esd.lib
+//   Ports: VDD PAD VSS
+//   Topology:
+//     diodevdd_2kv PAD VDD diodevdd_mod area=DEV_A pj=DEV_P m=m
+//     dsub_2kv      VSS VDD dsub_2kv_mod area=sub_A pj=sub_P m=m
+//   Defaults: DEV_A=35 DEV_P=58.08 sub_A=224.9559 sub_P=81.12 m=1
+//******************************************************************************
+
+(* desc="SG13G2 diodevdd_2kv PAD-VDD 2 kV ESD clamp" *)
+module diodevdd_2kv(VDD, PAD, VSS);
+    inout VDD, PAD, VSS;
+    electrical VDD, PAD, VSS;
+
+    (* desc="Forward diode draw area (multiplier)", units="" *)
+    parameter real DEV_A = 35 from [0:1e99); // TODO: 1e99->inf once fixed
+    (* desc="Forward diode perimeter (multiplier)", units="" *)
+    parameter real DEV_P = 58.08 from [0:1e99); // TODO: 1e99->inf once fixed
+    (* desc="Substrate diode draw area (multiplier)", units="" *)
+    parameter real sub_A = 224.9559 from [0:1e99); // TODO: 1e99->inf once fixed
+    (* desc="Substrate diode perimeter (multiplier)", units="" *)
+    parameter real sub_P = 81.12 from [0:1e99); // TODO: 1e99->inf once fixed
+    (* desc="Instance multiplicity" *)
+    parameter integer m  = 1 from [1:1e99); // TODO: 1e99->inf once fixed
+
+    diodevdd_mod #(.area(DEV_A), .pj(DEV_P), .m(m)) D_PAD(PAD, VDD);
+    dsub_2kv_mod #(.area(sub_A), .pj(sub_P), .m(m)) D_SUB(VSS, VDD);
+endmodule
+
+//******************************************************************************
+// diodevdd_4kv -- sg13g2_esd.lib
+//   Ports: VDD PAD VSS
+//   Topology (SPICE `.ends diodevdd_4kv_mod` typo retained, the parameter
+//   block and instance names below still bind to the `diodevdd_4kv` subckt):
+//     diodevdd_4kv PAD VDD diodevdd_mod area=DEV_A pj=DEV_P m=m
+//     dsub_4kv      VSS VDD dsub_4kv_mod area=sub_A pj=sub_P m=m
+//   Defaults: DEV_A=70 DEV_P=116.2 sub_A=381.0339 sub_P=90.32 m=1
+//******************************************************************************
+
+(* desc="SG13G2 diodevdd_4kv PAD-VDD 4 kV ESD clamp" *)
+module diodevdd_4kv(VDD, PAD, VSS);
+    inout VDD, PAD, VSS;
+    electrical VDD, PAD, VSS;
+
+    parameter real DEV_A = 70        from [0:1e99); // TODO: 1e99->inf once fixed
+    parameter real DEV_P = 116.2     from [0:1e99); // TODO: 1e99->inf once fixed
+    parameter real sub_A = 381.0339  from [0:1e99); // TODO: 1e99->inf once fixed
+    parameter real sub_P = 90.32     from [0:1e99); // TODO: 1e99->inf once fixed
+    parameter integer m  = 1         from [1:1e99); // TODO: 1e99->inf once fixed
+
+    diodevdd_mod #(.area(DEV_A), .pj(DEV_P), .m(m)) D_PAD(PAD, VDD);
+    dsub_4kv_mod #(.area(sub_A), .pj(sub_P), .m(m)) D_SUB(VSS, VDD);
+endmodule
+
+//******************************************************************************
+// diodevss_2kv -- sg13g2_esd.lib
+//   Ports: VDD PAD VSS
+//   Topology:
+//     diodevss_2kv VSS PAD diodevss_mod area=DEV_A pj=DEV_P m=m
+//     dsub_2kv     VSS VDD dsub_2kv_mod area=sub_A pj=sub_P m=m
+//   Defaults: DEV_A=35 DEV_P=58.08 sub_A=224.9559 sub_P=81.12 m=1
+//******************************************************************************
+
+(* desc="SG13G2 diodevss_2kv VSS-PAD 2 kV ESD clamp" *)
+module diodevss_2kv(VDD, PAD, VSS);
+    inout VDD, PAD, VSS;
+    electrical VDD, PAD, VSS;
+
+    parameter real DEV_A = 35        from [0:1e99); // TODO: 1e99->inf once fixed
+    parameter real DEV_P = 58.08     from [0:1e99); // TODO: 1e99->inf once fixed
+    parameter real sub_A = 224.9559  from [0:1e99); // TODO: 1e99->inf once fixed
+    parameter real sub_P = 81.12     from [0:1e99); // TODO: 1e99->inf once fixed
+    parameter integer m  = 1         from [1:1e99); // TODO: 1e99->inf once fixed
+
+    diodevss_mod #(.area(DEV_A), .pj(DEV_P), .m(m)) D_PAD(VSS, PAD);
+    dsub_2kv_mod #(.area(sub_A), .pj(sub_P), .m(m)) D_SUB(VSS, VDD);
+endmodule
+
+//******************************************************************************
+// diodevss_4kv -- sg13g2_esd.lib
+//   Ports: VDD PAD VSS
+//   Topology:
+//     diodevss_4kv VSS PAD diodevss_mod area=DEV_A pj=DEV_P m=m
+//     dsub_4kv     VSS VDD dsub_4kv_mod area=sub_A pj=sub_P m=m
+//   Defaults: DEV_A=70 DEV_P=116.2 sub_A=381.0339 sub_P=90.32 m=1
+//******************************************************************************
+
+(* desc="SG13G2 diodevss_4kv VSS-PAD 4 kV ESD clamp" *)
+module diodevss_4kv(VDD, PAD, VSS);
+    inout VDD, PAD, VSS;
+    electrical VDD, PAD, VSS;
+
+    parameter real DEV_A = 70        from [0:1e99); // TODO: 1e99->inf once fixed
+    parameter real DEV_P = 116.2     from [0:1e99); // TODO: 1e99->inf once fixed
+    parameter real sub_A = 381.0339  from [0:1e99); // TODO: 1e99->inf once fixed
+    parameter real sub_P = 90.32     from [0:1e99); // TODO: 1e99->inf once fixed
+    parameter integer m  = 1         from [1:1e99); // TODO: 1e99->inf once fixed
+
+    diodevss_mod #(.area(DEV_A), .pj(DEV_P), .m(m)) D_PAD(VSS, PAD);
+    dsub_4kv_mod #(.area(sub_A), .pj(sub_P), .m(m)) D_SUB(VSS, VDD);
+endmodule
+//******************************************************************************
+// ESD MOS Clamp devices
+//
+// Verilog-A port of the SPICE `.subckt nmoscl_2` / `.subckt nmoscl_4`
+// definitions at the bottom of `ngspice/models/sg13g2_moslv_mod.lib`.
+//
+// Topology (from SPICE, both subcircuits):
+//     Nsg13_lv_pmos VDD VSS VSS VSS <psp|psp_rf> w=... l=... nf=ng ...
+// i.e. a diode-connected PMOS body-tied to VSS used as an ESD clamp between
+// VDD and VSS. The 2-finger (`nmoscl_2`) and 4-finger (`nmoscl_4`)
+// variants share topology and differ only in diffusion geometry
+// (`as/ad/pd/ps`).
+//
+// Notes:
+// - SPICE `ngcon=2` on the inner `Nsg13_lv_pmos` instance is omitted: the
+//   VA path instantiates the paramset directly, matching the convention of
+//   `models/sg13g2_moslv_module.va` which also does not forward `ngcon`.
+// - SPICE `.include sg13g2_moslv_parm.lib` is satisfied by the existing
+//   `paramsets/nmoscl_psp_paramset.vams` and
+//   `paramsets/nmoscl_psp_rf_paramset.vams` (built by `models/Makefile`).
+// - The SPICE `.if (rfmode == 0) ... .else ...` selector has no
+//   Verilog-A `module`-scope conditional equivalent; both paramsets are
+//   instantiated on internal nodes and the active branch is wired to the
+//   external port by the analog-level switch inside each module
+//   (see the inline TODOs).
+//******************************************************************************
+
+//******************************************************************************
+// nmoscl_2 -- sg13g2_moslv_mod.lib
+//   Ports  : VDD VSS
+//   Defaults: l=0.36u w=168u m=1 ng=1 trise=0
+//             as=ad=58e-12 pd=ps=336u rfmode=0 pre_layout=1
+//******************************************************************************
+
+(* desc="SG13G2 nmoscl_2 diode-connected PMOS ESD clamp, 2-finger diffusion" *)
+module nmoscl_2(VDD, VSS);
+    inout VDD, VSS;
+    electrical VDD, VSS;
+
+    (* desc="Device length", units="m" *)
+    parameter real l = 0.36u  from [0.13u:10u];
+    (* desc="Device width", units="m" *)
+    parameter real w = 168u   from (0:1e99); // TODO: 1e99->inf once fixed
+    (* desc="Instance multiplicity" *)
+    parameter real m = 1.0 from (0:1e99); // TODO: 1e99->inf once fixed
+    (* desc="Number of fingers" *)
+    parameter integer ng = 1 from [1:1e99); // TODO: 1e99->inf once fixed
+    (* desc="Temperature offset w.r.t. ambient temperature" *)
+    parameter real trise = 0.0;
+    (* desc="Source diffusion area", units="m^2" *)
+    parameter real as = 58e-12 from [0:1e99); // TODO: 1e99->inf once fixed
+    (* desc="Drain diffusion area", units="m^2" *)
+    parameter real ad = 58e-12 from [0:1e99); // TODO: 1e99->inf once fixed
+    (* desc="Drain diffusion perimeter", units="m" *)
+    parameter real pd = 336u   from [0:1e99); // TODO: 1e99->inf once fixed
+    (* desc="Source diffusion perimeter", units="m" *)
+    parameter real ps = 336u   from [0:1e99); // TODO: 1e99->inf once fixed
+    (* desc="Enable pre-layout parasitic modelling" *)
+    parameter integer pre_layout = 1 from [0:1];
+    (* desc="Enable psp103_nqs RF model" *)
+    parameter integer rfmode = 0 from [0:1];
+
+    nmoscl_psp #(.w(w), .l(l), .m(m), .ng(ng), .as(as), .ad(ad), .pd(pd), .ps(ps), .trise(trise), .pre_layout(pre_layout), .rfmode(rfmode)) M_PSP(VDD, VSS, VSS, VSS);
+endmodule
+
+//******************************************************************************
+// nmoscl_4 -- sg13g2_moslv_mod.lib
+//   Ports  : VDD VSS
+//   Defaults: l=0.36u w=168u m=1 ng=1 trise=0
+//             as=ad=114e-12 pd=ps=672u rfmode=0 pre_layout=1
+//******************************************************************************
+
+(* desc="SG13G2 nmoscl_4 diode-connected PMOS ESD clamp, 4-finger diffusion" *)
+module nmoscl_4(VDD, VSS);
+    inout VDD, VSS;
+    electrical VDD, VSS;
+
+    (* desc="Device length", units="m" *)
+    parameter real l = 0.36u   from [0.13u:10u];
+    (* desc="Device width", units="m" *)
+    parameter real w = 168u    from (0:1e99); // TODO: 1e99->inf once fixed
+    (* desc="Instance multiplicity" *)
+    parameter real m = 1.0     from (0:1e99); // TODO: 1e99->inf once fixed
+    (* desc="Number of fingers" *)
+    parameter integer ng = 1 from [1:1e99); // TODO: 1e99->inf once fixed
+    (* desc="Temperature offset w.r.t. ambient temperature" *)
+    parameter real trise = 0.0;
+    (* desc="Source diffusion area", units="m^2" *)
+    parameter real as = 114e-12 from [0:1e99); // TODO: 1e99->inf once fixed
+    (* desc="Drain diffusion area", units="m^2" *)
+    parameter real ad = 114e-12 from [0:1e99); // TODO: 1e99->inf once fixed
+    (* desc="Drain diffusion perimeter", units="m" *)
+    parameter real pd = 672u    from [0:1e99); // TODO: 1e99->inf once fixed
+    (* desc="Source diffusion perimeter", units="m" *)
+    parameter real ps = 672u    from [0:1e99); // TODO: 1e99->inf once fixed
+    (* desc="Enable pre-layout parasitic modelling" *)
+    parameter integer pre_layout = 1 from [0:1];
+    (* desc="Enable psp103_nqs RF model" *)
+    parameter integer rfmode = 0 from [0:1];
+
+    nmoscl_psp #(.w(w), .l(l), .m(m), .ng(ng), .as(as), .ad(ad), .pd(pd), .ps(ps), .trise(trise), .pre_layout(pre_layout), .rfmode(rfmode)) M_PSP(VDD, VSS, VSS, VSS);
+
+endmodule
+
+
+

@@ -1,0 +1,147 @@
+//******************************************************************************
+//                                                                             *
+// Copyright 2026 IHP PDK Authors                                              *
+//                                                                             *
+// Licensed under the Apache License, Version 2.0 (the "License");             *
+// you may not use this file except in compliance with the License.            *
+// You may obtain a copy of the License at                                     *
+//                                                                             *
+//     https://www.apache.org/licenses/LICENSE-2.0                             *
+//                                                                             *
+// Unless required by applicable law or agreed to in writing, software         *
+// distributed under the License is distributed on an "AS IS" BASIS,           *
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.    *
+// See the License for the specific language governing permissions and         *
+// limitations under the License.                                              *
+//                                                                             *
+//******************************************************************************
+
+//*************************************
+// Device: isolbox
+// Testfield: T327
+// Technology: all IHP 0u13 technologies (SG13S, SG13G2)
+// Lot: PQE701
+// Wafer: 08
+// Chip: 6,4;6,5
+// DUTs: IS102..107;IS202...IS210
+// Temperature range: -40°C ... +125°C
+// DC range: -80V ... 1V (depending on pWellBlock width)
+// Operator: Teply
+// Date: 2016-03-31
+// Remarks: bipolar effect NOT taken into account
+//          model is designed for reverse direction of the diodes
+//          NO statistics
+//          initial model
+//************************************
+
+//******************************************************************************
+// isolbox dpwdnw paramsets
+//******************************************************************************
+
+(* desc="isolbox diode: SPICE inner pn clamp diode, L136." *)
+paramset dinner_mod sp_diode
+    parameter real area = 1 from [0:inf);
+    parameter real pj = 0 from [0:inf);
+    .area = area;
+    .pj   = pj;
+    .level = 1;
+    .tlev  = 2;
+    .tlevc = 0;
+    .tnom  = 27;
+    .is   = 1.5e-19;
+    .n    = 1.02;
+    .ikf  = 100e-9;
+    .xti  = 1.9;
+    .bv   = 9.7;
+    .ibv  = 1e-12;
+    .nbv  = 0.1;
+    .tcv  = -698.557e-6;
+    .rs   = 5e5;
+endparamset
+
+(* desc="isolbox diode: SPICE sidewall edge of deep-nwell clamp, L147." *)
+paramset dinneredge_mod sp_diode
+    parameter real area = 1 from [0:inf);
+    parameter real pj = 0 from [0:inf);
+    .area = area;
+    .pj   = pj;
+    .level = 1;
+    .tlev  = 2;
+    .tlevc = 0;
+    .tnom  = 27;
+    .is   = 3.89e-20;
+    .jsw  = 7.239e-20;
+    .n    = 1.01;
+    .ikf  = 3e-6;
+    .xti  = 1.529;
+    .bv   = 9.7;
+    .ibv  = 1e-12;
+    .nbv  = 0.1;
+    .tcv  = -698.557e-6;
+    .isr  = 20e-18;
+    .rs   = 5e4;
+endparamset
+
+(* desc="isolbox diode: SPICE low-field reverse diode (n=100), L155." *)
+paramset dinrevl_mod sp_diode
+    parameter real area = 1 from [0:inf);
+    parameter real pj = 0 from [0:inf);
+    .area = area;
+    .pj   = pj;
+    .level = 1;
+    .tlev  = 2;
+    .tlevc = 0;
+    .tnom  = 27;
+    .is  = 1e-18;
+    .n   = 100;
+    .xti = 2200;
+endparamset
+
+(* desc="isolbox diode: SPICE reverse sidewall diode (n=100), L162." *)
+paramset dinrevlside_mod sp_diode
+    parameter real area = 1 from [0:inf);
+    parameter real pj = 0 from [0:inf);
+    .area = area;
+    .pj   = pj;
+    .level = 1;
+    .tlev  = 2;
+    .tlevc = 0;
+    .tnom  = 27;
+    .is  = 10e-18;
+    .n   = 100;
+    .xti = 2200;
+endparamset
+
+(* desc="isolbox diode: SPICE high-field reverse diode (n=30), L170." *)
+paramset dinrevh_mod sp_diode
+    parameter real area = 1 from [0:inf);
+    parameter real pj = 0 from [0:inf);
+    .area = area;
+    .pj   = pj;
+    .level = 1;
+    .tlev  = 2;
+    .tlevc = 0;
+    .tnom  = 27;
+    .is  = 3e-21;
+    .n   = 30;
+    .xti = 700;
+endparamset
+
+(* desc="isolbox diode: SPICE area-cap diode of deep-nwell clamp, L176." *)
+paramset dincaparea_mod sp_diode
+    parameter real area = 1 from [0:inf);
+    parameter real pj = 0 from [0:inf);
+    .area = area;
+    .pj   = pj;
+    .level = 1;
+    .tlev  = 2;
+    .tlevc = 0;
+    .tnom  = 27;
+    .is   = 1e-25;
+    .cjo  = 967.2e-18;
+    .cjsw = 436e-18;
+    .m    = 0.3436;
+    .mjsw = 0.3234;
+    .vj   = 0.7312;
+    .php  = 0.7036;
+endparamset

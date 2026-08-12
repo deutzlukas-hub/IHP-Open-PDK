@@ -1,0 +1,98 @@
+//******************************************************************************
+//                                                                             *
+// Copyright 2026 IHP PDK Authors                                              *
+//                                                                             *
+// Licensed under the Apache License, Version 2.0 (the "License");             *
+// you may not use this file except in compliance with the License.            *
+// You may obtain a copy of the License at                                     *
+//                                                                             *
+//     https://www.apache.org/licenses/LICENSE-2.0                             *
+//                                                                             *
+// Unless required by applicable law or agreed to in writing, software         *
+// distributed under the License is distributed on an "AS IS" BASIS,           *
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.    *
+// See the License for the specific language governing permissions and         *
+// limitations under the License.                                              *
+//                                                                             *
+//******************************************************************************
+
+//*************************************
+// Device: dpantenna
+// Testfield: T262
+// Technology: IHP SG13S technologies
+// Lot: AWL403#A
+// Wafer: 19
+// Chip: 4,7
+// Segment: S351B
+// DUTs: D1 (area), D2 (perimeter) and D4 (corners)
+// Temperature range: -40°C ... +125°C
+// DC range: -15V ... 1V
+// Date: 05.03.2013
+// Remarks: model is designed for reverse direction of the diodes
+//          bipolar effect in forward direction is NOT modeled
+//          NO statistics
+//          initial model
+//  DEV_A = area of the diode in um*um
+//  DEV_P = perimeter of the diode in um
+//  DEV_C = number of corners (default=4)
+//************************************
+
+(* desc="dpantenna diode paramset: area-contribution" *)
+paramset dparea sp_diode
+    parameter real area = 1 from (0:inf);
+    .area = area;
+    .tnom = 27;
+    .is   = 8.569E-20;
+    .n    = 1.003;
+    .ikf  = 2.957E-7;
+    .rs   = 1.728E+5;
+    .cjo  = 8.252E-16;
+    .m    = 0.3171;
+    .vj   = 0.6628;
+    .fc   = 0.5;
+    .bv   = 12.14;
+    .ibv  = 1E-6;
+    .tcv  = 0.001;
+    .nbv  = 11.85;
+    .isr  = 2.421E-19;
+    .xti  = 4.56;
+    .trs  = 0;
+    .trs2 = 0;
+    .tt   = 1E-12;
+endparamset
+
+(* desc="dpantenna diode paramset: perimeter-contribution" *)
+paramset dpperim sp_diode
+    parameter real area = 1 from (0:inf);
+    .area = area;
+    .tnom = 27;
+    .is   = 1.186E-20;
+    .n    = 1.006;
+    .ikf  = 2.158E-8;
+    .rs   = 1.577E+6;
+    .isr  = 7.211E-18;
+    .xti  = 4.118;
+    .bv   = 27.26;
+    .ibv  = 1.832E-11;
+    .nbv  = 32.47;
+    .cjo  = 3.657E-17;
+    .m    = 0.1512;
+    .vj   = 0.5241;
+    .tt   = 1E-12;
+endparamset
+
+(* desc="dpcorner diode paramset: corner-contribution" *)
+paramset dpcorner sp_diode
+    parameter real area = 1 from (0:inf);
+    .area = area;
+    .tnom = 27;
+    .is   = 6.965E-21;
+    .n    = 1;
+    .ikf  = 1.19E-8;
+    .rs   = 4.734E+5;
+    .isr  = 0;
+    .xti  = 3;
+    .cjo  = 0;
+    .m    = 0.5;
+    .vj   = 0.7;
+endparamset

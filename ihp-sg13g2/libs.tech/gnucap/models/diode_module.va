@@ -1,0 +1,213 @@
+//#######################################################################
+//
+// Copyright 2023 IHP PDK Authors
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//    https://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+// #######################################################################
+
+//******************************************************************************
+// Verilog-A DIODE device modules
+// Ported from `ngspice/models/diode.lib`
+//
+// Modifications:
+//
+// (c) Lukas Deutz 2026
+//******************************************************************************
+
+//*************************************
+// Device: dantenna
+// Testfield: T262
+// Technology: IHP SG13S technologies
+// Lot: AWL403#A
+// Wafer: 19
+// Chip: 4,7
+// Segment: S350B
+// DUTs: D1 (area), D2 (perimeter) and D4 (corners)
+// Temperature range: -40°C ... +125°C
+// DC range: -15V ... 1V
+// Date: 05.03.2013
+// 24.03.2015 WW area dependency and temperature dependency
+// for dantenna and dpantenna break down updated
+// Remarks: model is designed for reverse direction of the diodes
+//          NO statistics
+//          initial model
+//  DEV_A = area of the diode in um*umnew
+//  DEV_P = perimeter of the diode in um
+//  DEV_C = number of corners (default=4)
+//************************************
+
+(* desc="SG13S dantenna" *)
+module dantenna(anode, cathode);
+    inout anode, cathode;
+    electrical anode, cathode;
+
+    (* desc="Diode drawn length", units="m" *)
+    parameter real l = 780n from (0:1e99); // TODO: 1e99->inf once fixed
+    (* desc="Diode drawn width",  units="m" *)
+    parameter real w = 780n from (0:1e99); // TODO: 1e99->inf once fixed
+    (* desc="Number of corners" *)
+    localparam integer DEV_C = 4;
+    (* desc="Area of diode", units="um^2" *)
+    localparam real DEV_A = (l * w) / 1e-12;
+    (* desc="Perimeter of the diode", units="um" *)
+    localparam real DEV_P = 2 * (l + w) / 1e-6 ;
+
+    darea   #(.area(DEV_A)) D1(anode, cathode);
+    dperim  #(.area(DEV_P)) D2(anode, cathode);
+    dcorner #(.area(DEV_C)) D3(anode, cathode);
+endmodule
+
+//*************************************
+// Device: dpantenna
+// Testfield: T262
+// Technology: IHP SG13S technologies
+// Lot: AWL403#A
+// Wafer: 19
+// Chip: 4,7
+// Segment: S351B
+// DUTs: D1 (area), D2 (perimeter) and D4 (corners)
+// Temperature range: -40°C ... +125°C
+// DC range: -15V ... 1V
+// Date: 05.03.2013
+// Remarks: model is designed for reverse direction of the diodes
+//          bipolar effect in forward direction is NOT modeled
+//          NO statistics
+//          initial model
+//  DEV_A = area of the diode in um*um
+//  DEV_P = perimeter of the diode in um
+//  DEV_C = number of corners (default=4)
+//************************************
+
+(* desc="SG13S dpantenna" *)
+module dpantenna(anode, cathode);
+    inout anode, cathode;
+    electrical anode, cathode;
+
+    (* desc="Diode drawn length", units="m" *)
+    parameter real l = 780n from (0:1e99); // TODO: 1e99->inf once fixed
+    (* desc="Diode drawn width",  units="m" *)
+    parameter real w = 780n from (0:1e99); // TODO: 1e99->inf once fixed
+    (* desc="Number of corners" *)
+    localparam integer DEV_C = 4;
+    (* desc="Area of diode", units="um^2" *)
+    localparam real DEV_A = (l * w) / 1e-12 from [0:1e99);
+    (* desc="Perimeter of the diode", units="um" *)
+    localparam real DEV_P = (l + w) / 0.5e-6 from [0:1e99); // TODO: 1e99->inf once fixed
+
+    dparea   #(.area(DEV_A)) D1(anode, cathode);
+    dpperim  #(.area(DEV_P)) D2(anode, cathode);
+    dpcorner #(.area(DEV_C)) D3(anode, cathode);
+endmodule
+
+//*************************************
+// Device: isolbox
+// Testfield: T327
+// Technology: all IHP 0u13 technologies (SG13S, SG13G2)
+// Lot: PQE701
+// Wafer: 08
+// Chip: 6,4;6,5
+// DUTs: IS102..107;IS202...IS210
+// Temperature range: -40°C ... +125°C
+// DC range: -80V ... 1V (depending on pWellBlock width)
+// Operator: Teply
+// Date: 2016-03-31
+// Remarks: bipolar effect NOT taken into account
+//          model is designed for reverse direction of the diodes
+//          NO statistics
+//          initial model
+//************************************
+
+//*******************************************************************************
+//* isolbox
+//*******************************************************************************
+
+(* desc="(SG13S, SG13G2) isolbox" *)
+module isolbox(isosub, NWell, bn);
+    inout isosub, NWell, bn;
+    electrical isosub, NWell, bn;
+
+    (* desc="Length", units="m" *)
+    parameter real l = 3u from (0:1e99); // TODO: 1e99->inf once fixed
+    (* desc="Width", units="m" *)
+    parameter real w = 3u from (0:1e99); // TODO: 1e99->inf once fixed
+    (* desc="Deep-nwell diffusion depth", units="m" *)
+    parameter real xd = 0 from [0:3u];
+    (* desc="Instance multiplicity" *)
+    parameter integer mf = 1 from [1:1e99); // TODO: 1e99->inf once fixed
+
+    dpwdnw   #(.l(l), .w(w), .mf(mf)) xdpwdnw(isosub, NWell);
+    ddnwpsub #(.l(l), .w(w), .mf(mf)) xdnwpsub(NWell, bn);
+endmodule
+
+//******************************************************************************
+// dpwdnw (diodes.lib ~L108-145)
+//******************************************************************************
+
+(* desc="SG13G2 isosub" *)
+module dpwdnw(isosub, NWell);
+    inout isosub, NWell;
+    electrical isosub, NWell;
+
+    parameter real l = 3u from [0:1e99); // TODO: 1e99->inf once fixed
+    parameter real w = 3u from [0:1e99); // TODO: 1e99->inf once fixed
+    parameter integer mf = 1 from [1:1e99); // TODO: 1e99->inf once fixed
+
+    localparam real scaling = 1e-6;
+    localparam real aw  = (w - 2.1u) * (l - 2.1u);
+    localparam real pw  = (w + l) * 2 - 8 * 1.05u;
+    localparam real aws = aw / (scaling * scaling);
+    localparam real pws = pw / scaling;
+    localparam real maws = mf * aws;
+    localparam real mpws = mf * pws;
+    localparam real cap_pj = mpws - 3.0;
+
+    dinner_mod      #(.area(maws), .pj(0))      dinner      (isosub, NWell);
+    dinneredge_mod  #(.area(mpws), .pj(mpws))   dinneredge  (isosub, NWell);
+    dinrevl_mod     #(.area(maws), .pj(0))      dinrevl     (NWell, isosub);
+    dinrevlside_mod #(.area(mpws), .pj(0))      dinrevlside (NWell, isosub);
+    dinrevh_mod     #(.area(maws), .pj(0))      dinrevh     (NWell, isosub);
+    dincaparea_mod  #(.area(maws), .pj(cap_pj)) dincaparea  (isosub, NWell);
+endmodule
+
+//******************************************************************************
+// ddnwpsub (diodes.lib ~L149-220)
+//
+// SPICE .if (xds<0.6) douteredge0 ... .else douteredgexds ... has no
+// Verilog-A equivalent; default below is the xds variant -- see TODO.
+//******************************************************************************
+
+(* desc="SG13G2 nWell to p-sub clamp: 4 parallel diodes." *)
+module ddnwpsub(NWell, bn);
+    inout NWell, bn;
+    electrical NWell, bn;
+
+    parameter real l = 3u from [0:1e99); // TODO: 1e99->inf once fixed
+    parameter real w = 3u from [0:1e99); // TODO: 1e99->inf once fixed
+    parameter real xd = 0 from [0:3u];
+    parameter integer mf = 1 from [1:1e99); // TODO: 1e99->inf once fixed
+
+    localparam real scaling = 1e-6;
+    localparam real ab    = (w * l);
+    localparam real pb    = (w + l) * 2;
+    localparam real abus  = ab / (scaling * scaling);
+    localparam real pbs   = pb / scaling;
+    localparam real mabus = mf * abus;
+    localparam real mpbs  = mf * pbs;
+
+    // TODO: implement xds >= 0.6 branch once Gnucap supports generate
+    dsub_mod          #(.area(mabus), .pj(0))           douter(bn, NWell);
+    dsubedge0_mod     #(.area(mpbs),  .pj(mpbs))        douteredge0 (bn, NWell);
+    doutcapcorner_mod #(.area(1.0e-10), .pj(mf * 14.4)) doutcapcorner (bn, NWell);
+    doutcaparea_mod   #(.area(mabus), .pj(mpbs))        doutcaparea(bn, NWell);
+endmodule

@@ -1,0 +1,109 @@
+(* desc="schottky substrate PNP (mod1_pnp)" *)
+paramset mod1_pnp bjt
+    parameter real area = 1 from (0:1e99); // TODO: 1e99->inf once fixed
+
+    .type = -1; // PNP
+    .area = area;
+    .tnom = 27;
+    .is   = 2e-18;
+    .nf   = 0.93304;
+    .nr   = 0.848;
+    .ikf  = 0.0128824955169313;
+    .bf   = 0.287719968668579;
+    .rc   = 420000;
+    .rb   = 408;
+    .kf   = 6.704272e-08 * corner_dio.schottky_nbl1_kf;
+    .af   = 0.53;
+    .eg   = 0.95;
+endparamset
+
+
+paramset dmain_mod sp_diode
+    parameter real area = 1 from (0:1e99); // TODO: 1e99->inf once fixed
+    parameter real pj   = 0 from [0:1e99); // TODO: 1e99->inf once fixed
+
+    .area = area;
+    .pj = pj;
+    .tnom =27
+    .is = 4.90112e-10
+    .n =1.057
+    .ik =0.07311
+    .cj =8E-16
+    .cjsw =0
+    .mj =0.569
+    .vj =0.4
+    .eg =0.450
+    .xti =4.633
+    .kf = 3.16227766016838E-12
+    .af =1.205
+    .tlevc=1
+    .cta =0.001
+    .tlev=1
+    * + imax=10
+
+
+(* desc="schottky reverse diode (drev_mod)" *)
+paramset drev_mod sp_diode
+    parameter real area = 1 from (0:1e99); // TODO: 1e99->inf once fixed
+    parameter real pj   = 0 from [0:1e99); // TODO: 1e99->inf once fixed
+
+    .area = area;
+    .pj   = pj;
+    .tnom = 27;
+    .level = 1;
+    .is   = 2.707e-10;
+    .n    = 16.9;
+    .ik   = 1.66e-05;
+    .eg   = 6.5;
+    .xti  = 4;
+    .kf   = 3.43962955648912e-09 * corner_dio.schottky_nbl1_kf;
+    .af   = 1.75;
+endparamset
+
+//******************************************************************************
+// dsub_mod -- substrate diode (S <-> C).
+//   SPICE: D (tnom=27
+//           is = 1.141E-16   rs = 19700   n = 1   ik = 5E-07
+//           cj = 1.5E-16     cjsw = 0     mj = 0.6   vj = 0.5
+//           eg = 1.17        xti = 3
+//           bv = 23          tcv = -0.00079   ibv = 1E-15   nbv = 1
+//           tlevc = 1   cta = 0.001   tlev = 1)
+//******************************************************************************
+
+(* desc="schottky substrate diode (dsub_mod)" *)
+paramset dsub_mod sp_diode
+    parameter real area = 1 from (0:1e99); // TODO: 1e99->inf once fixed
+    parameter real pj   = 0 from [0:1e99); // TODO: 1e99->inf once fixed
+
+    .area = area;
+    .pj   = pj;
+    .tnom = 27;
+    .tlev  = 1;
+    .tlevc = 1;
+    .cta   = 0.001;
+    .is   = 1.141e-16;
+    .rs   = 19700;
+    .n    = 1;
+    .ik   = 5e-07;
+    .cjo  = 1.5e-16;
+    .cjsw = 0;
+    .m    = 0.6;
+    .vj   = 0.5;
+    .eg   = 1.17;
+    .xti  = 3;
+    .bv   = 23;
+    .tcv  = -0.00079;
+    .ibv  = 1e-15;
+    .nbv  = 1;
+endparamset
+
+//******************************************************************************
+// schottky_nbl1_mod1_pnp -- parasitic vertical PNP (A -> C -> S).
+//   SPICE: pnp (tnom=27
+//             is = 2E-18                  nf = 0.93304     nr = 0.848
+//             ikf = 0.0128824955169313    bf = 0.287719968668579
+//             rc = 420000                 rb = 408
+//             kf = 6.704272E-08 * schottky_nbl1_kf   af = 0.53
+//             eg = 0.95)
+//******************************************************************************
+

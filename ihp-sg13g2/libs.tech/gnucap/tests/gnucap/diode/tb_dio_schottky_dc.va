@@ -1,0 +1,15 @@
+
+module tb_dio_schottky_dc(C);
+    inout C;
+    electrical A, C, S;
+
+    parameter real i_bias = 1m;
+
+    ground gnd;
+
+    vsource #(.dc(0.0)) Vsub(S, gnd);
+    vsource #(.dc(0.0)) Vsub(A, gnd);
+    isource #(.dc(i_bias)) I0(gnd, C);
+
+    schottky_nbl1 #(.Nx(1), .Ny(1)) XD1(A, C, S);
+endmodule

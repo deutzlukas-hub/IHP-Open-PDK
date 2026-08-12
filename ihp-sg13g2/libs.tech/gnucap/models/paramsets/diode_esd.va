@@ -1,0 +1,153 @@
+//******************************************************************************
+//                                                                             *
+// Copyright 2026 IHP PDK Authors                                              *
+//                                                                             *
+// Licensed under the Apache License, Version 2.0 (the "License");             *
+// you may not use this file except in compliance with the License.            *
+// You may obtain a copy of the License at                                     *
+//                                                                             *
+//     https://www.apache.org/licenses/LICENSE-2.0                             *
+//                                                                             *
+// Unless required by applicable law or agreed to in writing, software         *
+// distributed under the License is distributed on an "AS IS" BASIS,           *
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.    *
+// See the License for the specific language governing permissions and         *
+// limitations under the License.                                              *
+//                                                                             *
+//******************************************************************************
+
+//******************************************************************************
+// Verilog-A sg13g2 ESD clamp diode paramset cards
+// Ported from `ngspice/models/sg13g2_esd.lib`.
+//
+// Each SPICE `.MODEL D <name>` becomes a `paramset` extending `sp_diode`.
+// `level=1` in the SPICE source has no Verilog-A counterpart; the `sp_diode`
+// default `level` is used. `cj` in `dsub_2kv_mod` / `dsub_4kv_mod` is an
+// alias for SPICE `cj0` and is mapped onto the `sp_diode` `.cjo` parameter.
+//******************************************************************************
+
+//******************************************************************************
+// diodevdd_mod -- sg13g2_esd.lib  (PAD<->VDD forward diode)
+//   D (tnom=27 level=1 is=4.911e-019 rs=289.6 n=1.04 isr=5.422E-015
+//      ikf=10m cj0=8.716e-016 m=0.3294 vj=0.6621 bv=11.81 ibv=4.744e-016
+//      nbv=1 eg=1.11 xti=4)
+//******************************************************************************
+
+(* desc="sg13g2 ESD PAD-VDD clamp diode model (diodevdd_mod)" *)
+
+
+paramset diodevdd sp_diode
+    parameter real area = 1 from (0:1e99); // TODO: 1e99->inf once fixed
+    parameter real pj   = 0 from [0:1e99); // TODO: 1e99->inf once fixed
+    parameter real m    = 1 from (0:1e99); // TODO: 1e99->inf once fixed; SPICE instance multiplicity (NOT grading coefficient)
+
+    .area = m * area;
+    .pj   = m * pj;
+
+    .tnom = 27;
+    // TODO: SPICE `level=1` has no Verilog-A counterpart; sp_diode default.
+    .is   = 4.911e-19;
+    .rs   = 289.6;
+    .n    = 1.04;
+    .isr  = 5.422e-15;
+    .ikf  = 10m;
+    .cjo  = 8.716e-16;
+    .m    = 0.3294;
+    .vj   = 0.6621;
+    .bv   = 11.81;
+    .ibv  = 4.744e-16;
+    .nbv  = 1;
+    .eg   = 1.11;
+    .xti  = 4;
+endparamset
+
+//******************************************************************************
+// diodevss_mod -- sg13g2_esd.lib  (VSS<->PAD forward diode)
+//   D (tnom=27 level=1 is=9.017E-019 rs=200 n=1.03 isr=3.776E-015
+//      ikf=0.0001754 cj0=9.42E-016 m=0.3012 vj=0.6684 bv=11.28
+//      ibv=1E-009 nbv=1.324 eg=1.17 xti=3)
+//******************************************************************************
+
+(* desc="sg13g2 ESD VSS-PAD clamp diode model (diodevss_mod)" *)
+paramset diodevss sp_diode
+    parameter real area = 1 from (0:1e99); // TODO: 1e99->inf once fixed
+    parameter real pj   = 0 from [0:1e99); // TODO: 1e99->inf once fixed
+    parameter real m    = 1 from (0:1e99); // TODO: 1e99->inf once fixed; SPICE instance multiplicity (NOT grading coefficient)
+
+    .area = m * area;
+    .pj   = m * pj;
+
+    .tnom = 27;
+    // TODO: SPICE `level=1` has no Verilog-A counterpart; sp_diode default.
+    .is   = 9.017e-19;
+    .rs   = 200;
+    .n    = 1.03;
+    .isr  = 3.776e-15;
+    .ikf  = 0.0001754;
+    .cjo  = 9.42e-16;
+    .m    = 0.3012;
+    .vj   = 0.6684;
+    .bv   = 11.28;
+    .ibv  = 1e-9;
+    .nbv  = 1.324;
+    .eg   = 1.17;
+    .xti  = 3;
+endparamset
+
+//******************************************************************************
+// dsub_2kv_mod -- sg13g2_esd.lib  (VSS<->VDD substrate clamp, 2 kV)
+//   D (tnom=27 is=1.7E-016 rs=4.759 n=1 ikf=10m cj=99.77E-018
+//      vj=0.4547 bv=10 ibv=1E-019 xti=3 eg=1.11)
+//******************************************************************************
+
+(* desc="sg13g2 ESD substrate clamp diode model, 2 kV (dsub_2kv_mod)" *)
+paramset dsub_2kv sp_diode
+    parameter real area = 1 from (0:1e99); // TODO: 1e99->inf once fixed
+    parameter real pj   = 0 from [0:1e99); // TODO: 1e99->inf once fixed
+    parameter real m    = 1 from (0:1e99); // TODO: 1e99->inf once fixed; SPICE instance multiplicity (NOT grading coefficient)
+
+    .area = m * area;
+    .pj   = m * pj;
+
+    .tnom = 27;
+    // TODO: SPICE `cj` is an alias for `cj0`; mapped onto .cjo for sp_diode.
+    .is   = 1.7e-16;
+    .rs   = 4.759;
+    .n    = 1;
+    .ikf  = 10m;
+    .cjo  = 99.77e-18;
+    .vj   = 0.4547;
+    .bv   = 10;
+    .ibv  = 1e-19;
+    .xti  = 3;
+    .eg   = 1.11;
+endparamset
+
+//******************************************************************************
+// dsub_4kv_mod -- sg13g2_esd.lib  (VSS<->VDD substrate clamp, 4 kV)
+//   D (tnom=27 is=1.7E-016 rs=4.759 n=1 ikf=100u cj=99.77E-018
+//      vj=0.4547 bv=10 ibv=0 xti=3 eg=1.11)
+//******************************************************************************
+
+(* desc="sg13g2 ESD substrate clamp diode model, 4 kV (dsub_4kv_mod)" *)
+paramset dsub_4kv sp_diode
+    parameter real area = 1 from (0:1e99); // TODO: 1e99->inf once fixed
+    parameter real pj   = 0 from [0:1e99); // TODO: 1e99->inf once fixed
+    parameter real m    = 1 from (0:1e99); // TODO: 1e99->inf once fixed; SPICE instance multiplicity (NOT grading coefficient)
+
+    .area = m * area;
+    .pj   = m * pj;
+
+    .tnom = 27;
+    // TODO: SPICE `cj` is an alias for `cj0`; mapped onto .cjo for sp_diode.
+    .is   = 1.7e-16;
+    .rs   = 4.759;
+    .n    = 1;
+    .ikf  = 100u;
+    .cjo  = 99.77e-18;
+    .vj   = 0.4547;
+    .bv   = 10;
+    .ibv  = 0;
+    .xti  = 3;
+    .eg   = 1.11;
+endparamset

@@ -9,8 +9,8 @@ MODELS = \
 	psp103 \
 	cap_cmomi \
 	cap_cmomf \
-	vbic_1p3
-
+	vbic_1p3 \
+	diode
 
 MGFLAGS = -I $(shell gnucap-conf --includedir) -I . \
 	$(addprefix -I $(IHP_VERILOG_DIR)/, $(MODELS))
@@ -28,6 +28,7 @@ TARGETS = \
 	sg13g2_moshv_paramset \
 	sg13g2_moshv_rf_paramset \
 	sg13g2_hbt_paramset \
+	diode_paramset
 
 PLUGINS = $(TARGETS:%=$(TARGET_DIR)/%.so)
 
