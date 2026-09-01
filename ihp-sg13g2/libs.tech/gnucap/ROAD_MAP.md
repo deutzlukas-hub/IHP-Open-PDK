@@ -16,7 +16,7 @@
 - [ ] mosfets
   - [X] moslv
   - [X] moshv
-  - [ ] hbt
+  - [x] hbt
   - [ ] esd
   - [ ] dschottky_nb1
   - [ ] bondpad
