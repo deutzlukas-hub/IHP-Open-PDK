@@ -49,22 +49,20 @@
 
 
 //******************************************************************************
-// Verilog-A MOSCAP corner modules
-// Ported from `ngspice/models/cornerMOSCAP.lib`
+// MOSCAP corner modules
+//
+// Adapted from `ngspice/models/cornerMOSCAP.lib`
 //
 // Modifications:
-// - removed mismatch corners; mismatch variants are implemented in paramsets
-// - moved global process-variation parameters into statistical corner
-// - changed norm suffix to nom for nominal
-// - dropped num_sigmas parameter
-//
-// (c) Lukas Deutz 2026
+// - Mismatch corners removed; mismatch device variants use paramset overloading
+// - Moved global process-variation parameters into statistical corner
+// - Use nom suffix instead of norm for consistency
+// - Dropped num_sigmas parameter
 //******************************************************************************
-
-
 
 //*************** CORNER_LIB OF sg13g2 MOSCAP TT MODEL ****************
 
+(* desc = "typical MOSCAP corner" *)
 module moscap_tt();
     // nmos
     localparam real sg13g2_moscap_n_vfbo    = 1.0;
@@ -104,9 +102,9 @@ module moscap_tt();
     localparam real sg13g2_moscap_p_cjorgat = 1.0000;
 endmodule
 
-// Typical with statistical
+(* desc = "statistical MOSCAP corner" *)
 module moscap_tt_stat();
-    parameter integer seed = 1 from [0:1000000); // TODO: upper inf not working yet
+    parameter integer seed = 0;
     // nmos nominal
     localparam real sg13g2_moscap_n_vfbo_nom    = 1.0;
     localparam real sg13g2_moscap_n_ctl_nom     = 1.2080;
