@@ -1,6 +1,6 @@
 //******************************************************************************
 //                                                                             *
-// Copyright 2023 IHP PDK Authors                                              *
+// Copyright 2026 IHP PDK Authors                                              *
 //                                                                             *
 // Licensed under the Apache License, Version 2.0 (the "License");             *
 // you may not use this file except in compliance with the License.            *
@@ -17,35 +17,48 @@
 //******************************************************************************
 
 //******************************************************************************
-// Capacitors paramsets
+// cmim_core paramsets
 //
-// Adopted from `ngspice/models/capacitors_*.lib` files.
+// Adopted from `ngspice/models/capacitors_*.lib`
 //
-// Paramsets for different capacitor types are included below
+// Modifications from the upstream :
+// - removed sf scale factor;
+// - converted cjsw to SI units (F/m);
 //******************************************************************************
 
-`pragma modelgen nogen-module
+(* desc="cmim_core capacitor paramset, without mismatch" *)
+paramset cmim_core sp_capacitor
+    (* desc="Device length", units="m" *)
+    parameter real l = 7.0u;
+    (* desc="Device width",  units="m" *)
+    parameter real w = 7.0u;
+    (* desc="Enable mismatch" *)
+    parameter integer mm_ok = 0 from [0:0];
+    .l = l;
+    .w = w;
+    .scale = 1;
+    .tnom = 27.0;
+    .tc1 = 3.6E-6;
+    .tc2 = 2E-9;
+    .cj = corner_cap.cap_carea;
+    .cjsw = 40E-12; // F/m
+endparamset
 
-// Shared primitives / behavioural modules
-`include "capacitor.va"
-`include "cap_cmomi.va"
-`include "cap_cmomf.va"
-
-// Per-family paramset bodies
-`include "paramsets/capacitor_cparasitic.va"
-`include "paramsets/capacitor_cmim_core.va"
-`include "paramsets/capacitor_cmomi.va"
-`include "paramsets/capacitor_cmomf.va"
-
-// Reserved slots -- uncomment and fill when the device is adapted.
-//
-// Only `cparasitic`, `cmim_core`, `cmomi`, and `cmomf` are adapted for now.
-// The remaining g2 capacitor devices fold into either:
-//
-//   - a direct paramset over their primitive, like cparasitic / cmim_core /
-//     cmomi (add an mm_ok=0/1 overload once the mismatch spread is
-//     characterised), or
-//
-//   - a compiled _module wrapper, cf. the MOS _module.va / _paramset.va
-//     split, when the device carries its own structural sub-circuit
-//     (core + series R + parasitics), as `cmim` / `rfcmim` do.
+(* desc="cmim_core sp_capacitor paramset, with mismatch" *)
+paramset cmim_core sp_capacitor
+    (* desc="Device length", units="m" *)
+    parameter real l = 7.0u;
+    (* desc="Device width",  units="m" *)
+    parameter real w = 7.0u;
+    (* desc="Enable mismatch" *)
+    parameter integer mm_ok = 1 from [1:1];
+    localparam real area_um = sqrt(l * w * 1e12);
+    .l = l;
+    .w = w;
+    .scale = (1 + (cap_mm.cap_carea_mm - 1) / area_um);
+    .tnom = 27.0;
+    .tc1 = 3.6E-6;
+    .tc2 = 2E-9;
+    .cj = corner_cap.cap_carea;
+    .cjsw = 40E-12; // F/m
+endparamset
