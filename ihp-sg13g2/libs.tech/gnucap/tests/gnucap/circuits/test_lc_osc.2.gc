@@ -1,0 +1,47 @@
+// Functional testbench using the suffixed mixed-signal adapters.
+load mgsim
+load ../../../plugins/models/sg13g2_moslv_paramset.so
+load ../../../plugins/models/sg13g2_svaricaphv_paramset.so
+load ../../../plugins/models/idc.so
+
+load models/ngspice46/dio.so
+load vams/vpulse.so
+load vams/vsine.so
+load vams/vcvs.so
+
+spice
+
+.include ../../../models/paramsets/diode_dsubw.lib
+
+.verilog
+
+`include ../../../models/sg13g2_moslv_module.va
+`include ../../../models/sg13g2_svaricaphv_module.va
+
+`include ../../../models/cornerMOSlv.va
+`include ../../../models/cornerSVARICAPHV.va
+
+`include lc_osc.2.vams
+`include ./tb_lc_osc.va
+
+options abstol=1n
+options trtol=2.0
+options gmin=1n
+options itl6=250
+options method=trap
+options noincmode
+options numdgt=15
+
+moslv_tt corner_moslv();
+svaricaphv_tt corner_svaricaphv();
+
+tb_lc_osc tb(out1, out2, diff);
+print tran v(out1) v(out2) v(diff) iter(0)
+store tran v(out1) v(out2) v(diff)
+tran 2p  40n
+
+measure t2 = cross(probe="v(diff)" cross=0 rise after=10n last)
+measure t1 = cross(probe="v(diff)" cross=0 rise after=10n last before t2)
+parameter f_osc = {1.0 / (t2 - t1)}
+eval f_osc
+status notime

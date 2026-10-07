@@ -35,3 +35,22 @@ def round_significant(values: np.ndarray, digits: int) -> np.ndarray:
     scale = 10 ** np.floor(np.log10(np.abs(rounded[nonzero])))
     rounded[nonzero] = np.round(rounded[nonzero] / scale, digits - 1) * scale
     return rounded
+
+scales = {
+    "f": 1e-15,
+    "p": 1e-12,
+    "n": 1e-9,
+    "u": 1e-6,
+    "m": 1e-3,
+    "k": 1e3,
+    "M": 1e6,
+    "G": 1e9,
+    "T": 1e12,
+    "P": 1e15,
+}
+
+def engineering_to_float(value):
+    value = value.strip()
+    if value and value[-1] in scales:
+        return float(value[:-1]) * scales[value[-1]]
+    return float(value)

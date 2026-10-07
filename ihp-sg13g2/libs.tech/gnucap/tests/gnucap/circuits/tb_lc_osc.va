@@ -1,0 +1,18 @@
+
+module tb_lc_osc(out1, out2, diff);
+    output out1, out2, diff;
+    electrical out1, out2, diff;
+    electrical vdd, vss, out1, out2, ibias, diff;
+    ground gnd;
+
+    lc_osc osc1(vdd, out1, out2, gnd, ibias);
+
+    idc #(.dc(10u)) i1(ibias, gnd);
+ //   vsource #(.dc(1.2)) vdd1(vdd, gnd);
+    vpulse #(.val0(0), .val1(1.2), .td(50p), .rise(100p), .fall(100p), .width(1m), .period(2m)) vdd1(vdd, gnd);
+    vsource #(.dc(0.0)) vss1(vss, gnd);
+ //   diff_kick #(.amp(1u), .t_on(100p), .t_off(150p)) kick1(out1, out2);
+    vcvs #(.gain(1.0)) diff_probe(diff, gnd, out1, out2);
+    capacitor #(.c(10f)) c1(out1, gnd);
+    capacitor #(.c(10f)) c2(out2, gnd);
+endmodule
