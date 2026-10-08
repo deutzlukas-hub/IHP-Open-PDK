@@ -16,9 +16,11 @@ ref_dir_sp = tests_dir_sp / "svaricaphv" / "ref"
 assert ref_dir_gc.exists()
 assert ref_dir_sp.exists()
 
-def plot_test_svaricaphv_tran(corner: str, show: bool = False):
+def plot_test_svaricaphv_tran(corner: str, show: bool = False, nx: int = 1):
 
     test_name = f"test_svaricaphv_tran_{corner}"
+    if nx != 1:
+        test_name += f"_nx{nx}"
 
     filepath_gc = ref_dir_gc / (test_name + ".gc.out")
     filepath_sp = ref_dir_sp / (test_name + ".sp.out")
@@ -46,7 +48,7 @@ def plot_test_svaricaphv_tran(corner: str, show: bool = False):
     ax0 = plt.subplot(gs[0])
     ax1 = plt.subplot(gs[1], sharex=ax0)
 
-    plt.suptitle(f"sg13_hv_svaricap - transient ramp ({corner.upper()} corner)", fontsize=14)
+    plt.suptitle(f"sg13_hv_svaricap - transient ramp ({corner.upper()} corner, Nx={nx})", fontsize=14)
 
     ax0.plot(t_gc, vg1_gc, "-", color="blue", linewidth=2, label="Gnucap")
     ax0.plot(t_sp, v_sp, "--", color="orange", linewidth=1.5, label="Ngspice")
@@ -68,9 +70,11 @@ def plot_test_svaricaphv_tran(corner: str, show: bool = False):
 
     plt.close(fig)
 
-def plot_test_svaricaphv_ac(corner: str, show=False):
+def plot_test_svaricaphv_ac(corner: str, show=False, nx: int = 1):
 
     test_name = "test_svaricaphv_ac_" + corner
+    if nx != 1:
+        test_name += f"_nx{nx}"
 
     filepath_gc = ref_dir_gc / (test_name + ".gc.out")
     filepath_sp = ref_dir_sp / (test_name + ".sp.out")
@@ -102,7 +106,7 @@ def plot_test_svaricaphv_ac(corner: str, show=False):
     ax_ii = ax_ir.twinx()
     ax_cap = plt.subplot(gs[1], sharex=ax_ir)
 
-    plt.suptitle("sg13g2_hv_svaricap — AC", fontsize=14)
+    plt.suptitle(f"sg13g2_hv_svaricap — AC ({corner.upper()} corner, Nx={nx})", fontsize=14)
 
     ax_ir.semilogx(f_gc, ir_gc * 1e6, "-",  color="blue",   linewidth=2,   label="Gnucap")
     ax_ir.semilogx(f_sp, ir_sp * 1e6, "--", color="black",  linewidth=1.5, label="Ngspice")
@@ -245,12 +249,16 @@ def plot_test_svaricaphv_mc_mm_ac(corner: str, show: bool = False):
 
 def main():
 
-    for corner in ["tt", "ss", "ff", "sf", "fs"]:
-        plot_test_svaricaphv_tran(corner)
-        plot_test_svaricaphv_ac(corner)
-        plot_test_svaricaphv_mc_mm_ac(corner)
+    # for corner in ["tt", "ss", "ff", "sf", "fs"]:
+    #     plot_test_svaricaphv_tran(corner)
+    #     plot_test_svaricaphv_ac(corner)
+    #     plot_test_svaricaphv_mc_mm_ac(corner)
+    #
+    # plot_test_svaricaphv_mc_stat_ac()
 
-    plot_test_svaricaphv_mc_stat_ac()
+    for nx in [2, 10]:
+        plot_test_svaricaphv_tran("tt", nx=nx)
+        plot_test_svaricaphv_ac("tt", nx=nx)
 
     print("Finished plotting svaricaphv!")
 
