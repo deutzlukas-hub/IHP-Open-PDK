@@ -26,7 +26,10 @@ gnucap/
 │   ├── Makefile         # Builds Verilog-A model plugins
 │   ├── corners/         # Process-corner definitions
 │   │   └── corner*.va   # Device-family corner modules
-│   └── paramsets/       # Device-specific paramset sources
+│   └── paramsets/       # Family umbrellas and device-specific paramset sources
+│       ├── {capacitors,resistors,diodes,svaricaphv}.va # Family build entry sources
+│       ├── sg13g2_{hbt,moscap,moslv,moslv_rf,moshv,moshv_rf}.va # SG13G2 family build sources
+│       └── <device_family>_*.va # Device-specific paramsets
 ├── cpp/                 # C++ source for Gnucap simulator plugins
 │   └── Makefile         # Builds Gnucap simulator plugins
 ├── tests/               # Test suite
@@ -123,6 +126,10 @@ make gnucap-plugins
 ### Build Verilog-A Model Plugin
 
 Build a specific model plugin:
+
+Family umbrella sources have concise names such as `models/paramsets/resistors.va`.
+The Makefile maps these to the existing build targets and plugin filenames, such
+as `resistor_paramset` and `plugins/models/resistor_paramset.so`.
 
 ```bash
 make -C models <model>

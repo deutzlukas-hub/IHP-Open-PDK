@@ -17,15 +17,15 @@
 //******************************************************************************
 
 //******************************************************************************
-// SG13G2 MOSHV RF (NQS) paramsets
+// SG13G2 HBT paramsets
 //
-// Aggregate source for building high-voltage MOS RF device plugins. It
-// includes the PSPNQS103VA compact model and the paramsets for different
-// high-voltage MOS RF device variants.
+// Aggregate source for building HBT device plugins. It includes the compact
+// VBIC model and the paramsets for different HBT device variants.
 //******************************************************************************
 
 `pragma modelgen nogen-module
-`include "psp103_nqs.va"
+`include "vbic_1p3.va"
 
-`include "paramsets/sg13g2_moshv_rf_nmos.va"
-`include "paramsets/sg13g2_moshv_rf_pmos.va"
+`include "sg13g2_hbt_npn13G2.va"
+`include "sg13g2_hbt_npn13G2l.va"
+`include "sg13g2_hbt_npn13G2v.va"

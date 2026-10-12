@@ -17,16 +17,14 @@
 //******************************************************************************
 
 //******************************************************************************
-// SG13G2 MOSLV RF (NQS) paramsets
+// SG13G2 MOSCAP paramsets
 //
-// Aggregate source for building low-voltage MOS RF device plugins. It
-// includes the PSPNQS103VA compact model and the paramsets for different
-// low-voltage MOS RF device variants.
+// Aggregate source for building MOSCAP device plugins. It includes the
+// PSP103VA compact model and the paramsets for MOSCAP NMOS and PMOS variants.
 //******************************************************************************
 
 `pragma modelgen nogen-module
-`include "psp103_nqs.va"
+`include "psp103.va"
 
-`include "paramsets/sg13g2_moslv_rf_nmos.va"
-`include "paramsets/sg13g2_moslv_rf_pmos.va"
-`include "paramsets/sg13g2_moslv_rf_nmoscl.va"
+`include "sg13g2_moscap_nmos.va"
+`include "sg13g2_moscap_pmos.va"

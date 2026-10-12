@@ -17,15 +17,14 @@
 //******************************************************************************
 
 //******************************************************************************
-// SG13G2 HBT paramsets
+// sg13g2_svaricaphv paramsets
 //
-// Aggregate source for building HBT device plugins. It includes the compact
-// VBIC model and the paramsets for different HBT device variants.
+// Aggregate source for building the high-voltage svaricaphv device plugin. It
+// includes the mosvar compact model and the svaricaphv paramset.
 //******************************************************************************
 
 `pragma modelgen nogen-module
-`include "vbic_1p3.va"
 
-`include "paramsets/sg13g2_hbt_npn13G2.va"
-`include "paramsets/sg13g2_hbt_npn13G2l.va"
-`include "paramsets/sg13g2_hbt_npn13G2v.va"
+`include "mosvar.va"
+
+`include "sg13g2_svaricaphv.va"

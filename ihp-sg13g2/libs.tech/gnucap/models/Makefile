@@ -34,6 +34,19 @@ TARGETS = \
 
 PLUGINS = $(TARGETS:%=$(TARGET_DIR)/%.so)
 
+# Concise family source names map to the established plugin and command names.
+PARAMSET_TARGETS = $(filter-out idc vpulse,$(TARGETS))
+PARAMSET_SOURCE_resistor_paramset = paramsets/resistors.va
+PARAMSET_SOURCE_capacitor_paramset = paramsets/capacitors.va
+PARAMSET_SOURCE_sg13g2_moscap_paramset = paramsets/sg13g2_moscap.va
+PARAMSET_SOURCE_sg13g2_svaricaphv_paramset = paramsets/svaricaphv.va
+PARAMSET_SOURCE_sg13g2_moslv_paramset = paramsets/sg13g2_moslv.va
+PARAMSET_SOURCE_sg13g2_moslv_rf_paramset = paramsets/sg13g2_moslv_rf.va
+PARAMSET_SOURCE_sg13g2_moshv_paramset = paramsets/sg13g2_moshv.va
+PARAMSET_SOURCE_sg13g2_moshv_rf_paramset = paramsets/sg13g2_moshv_rf.va
+PARAMSET_SOURCE_sg13g2_hbt_paramset = paramsets/sg13g2_hbt.va
+PARAMSET_SOURCES = $(foreach target,$(PARAMSET_TARGETS),$(PARAMSET_SOURCE_$(target)))
+
 # Default target
 all: $(PLUGINS)
 
@@ -50,6 +63,17 @@ $(TARGETS): %: $(TARGET_DIR)/%.so
 $(TARGETS:%=dump-%): dump-%: %.dump.va
 # Auto-generate convenience targets to build OSDI for each item in TARGETS
 $(TARGETS:%=osdi-%): osdi-%: $(OSDI_DIR)/%.osdi
+
+# Declare the umbrella first so $< remains the build entry source when the
+# included-source prerequisites below are added to these targets.
+define PARAMSET_RULES
+$(TARGET_DIR)/$(1).cc: $(PARAMSET_SOURCE_$(1)) | $(TARGET_DIR)
+	$${MODELGEN_VERILOG} $${MGFLAGS} -o $$@ --cc $$<
+
+$(1).dump.va: $(PARAMSET_SOURCE_$(1))
+	$${MODELGEN_VERILOG} $${MGFLAGS} -o $$@ --dump $$<
+endef
+$(foreach target,$(PARAMSET_TARGETS),$(eval $(call PARAMSET_RULES,$(target))))
 
 # Sources reached through `include, listed by hand because gnucap-mg-vams has no
 # dependency-output mode. Without them make compares only the paramset file
@@ -73,8 +97,9 @@ CAPACITOR_PARAMSETS = $(wildcard paramsets/capacitor_*.va)
 SVARICAPHV_PARAMSETS = paramsets/sg13g2_svaricaphv.va
 HBT_PARAMSETS = $(wildcard paramsets/sg13g2_hbt_*.va)
 MOSCAP_PARAMSETS = $(wildcard paramsets/sg13g2_moscap_*.va)
-MOSLV_PARAMSETS = $(wildcard paramsets/sg13g2_moslv_*.va)
-MOSHV_PARAMSETS = $(wildcard paramsets/sg13g2_moshv_*.va)
+# RF umbrellas share the device-file prefix but are separate build entry sources.
+MOSLV_PARAMSETS = $(filter-out $(PARAMSET_SOURCES),$(wildcard paramsets/sg13g2_moslv_*.va))
+MOSHV_PARAMSETS = $(filter-out $(PARAMSET_SOURCES),$(wildcard paramsets/sg13g2_moshv_*.va))
 
 $(TARGET_DIR)/resistor_paramset.cc:          resistor.va discipline.h $(R3CMC_SRC) $(RES_PARAMSETS)
 $(TARGET_DIR)/capacitor_paramset.cc:         capacitor.va $(CMOMI_SRC) $(CMOMF_SRC) $(CAPACITOR_PARAMSETS)
